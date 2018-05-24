@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.utils import timezone
 
 class Category(models.Model):
@@ -7,7 +7,7 @@ class Category(models.Model):
     question_count = models.PositiveSmallIntegerField()
     def random_questions(self):
         import random
-        ids        = self.question_set.objects.values_list('id', flat=True)
+        ids        = [id for id in self.question_set.values_list('pk', flat=True)]
         random_ids = random.sample(ids, min(len(ids), self.question_count))
         return Question.objects.filter(id__in=random_ids)
     def __str__(self):
@@ -28,7 +28,7 @@ class Exam(models.Model):
     groups   = models.ManyToManyField(TesteeGroup)
     start    = models.DateTimeField('Boshlanish vaqti', default=timezone.now)
     deadline = models.DateTimeField('Tugash vaqti')
-    test_time     = models.TimeField('Test vaqti')
+    test_time= models.TimeField('Test vaqti')
     def __str__(self):
         return self.start.strftime("%d %b %Y")
 
@@ -44,9 +44,9 @@ class Testee(models.Model):
 
 class Question(models.Model):
     text     = models.CharField(max_length=255)
-    text_ru  = models.CharField(max_length=255)
-    text_en  = models.CharField(max_length=255)
-    pub_date = models.DateTimeField('Sana', auto_now=True)
+    text_ru  = models.CharField(max_length=255, null=True, blank=True)
+    text_en  = models.CharField(max_length=255, null=True, blank=True)
+    pub_date = models.DateTimeField('Sana', auto_now=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     is_multiple_choice = models.BooleanField(default=False)
     def __str__(self):
@@ -55,8 +55,8 @@ class Question(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     text     = models.CharField(max_length=255)
-    text_ru  = models.CharField(max_length=255)
-    text_en  = models.CharField(max_length=255)
+    text_ru  = models.CharField(max_length=255, null=True, blank=True)
+    text_en  = models.CharField(max_length=255, null=True, blank=True)
     mark     = models.PositiveSmallIntegerField(default=0)
     def __str__(self):
         return self.text

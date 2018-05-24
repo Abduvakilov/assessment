@@ -7,4 +7,8 @@ urlpatterns = [
     path('start/', views.start, name='start'),
     path('test/', views.test, name='test'),
     path('tanla/', views.choose, name='tanla'),
+    path('finish/', views.finish, name='finish'),
 ]
+
+
+#/<int:test_id>
