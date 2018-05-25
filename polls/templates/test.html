@@ -1,4 +1,6 @@
-<h3>{{ question.text }}</h3>
+
+<p id="time_left">...</p>
+<h3>{{ question_no }}. {{ question.text }}</h3>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -11,3 +13,5 @@
 <input type="submit" value="Tanla" />
 </form>
 
+<script>var distance={{ time_left }};</script>
+<script src="/static/time.js"></script>

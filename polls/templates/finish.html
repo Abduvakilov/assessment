@@ -1,1 +1,7 @@
+{% if error == 408 %}
+<p>Vaqtingiz tugadi. Rahmat</p>
+{% elif mark %}
 <p>Rahmat. Test tugadi</p>
+<p>Siz {{ mark }} bal to'pladingiz</p>
+{% endif %}
+<p><a href="{% url 'index' %}">Bosh sahifaga o'tish</a></p>

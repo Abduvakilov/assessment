@@ -2,27 +2,27 @@
 Siz <b>{{ user.get_username }}</b> sifatida kirdingiz.<br>
 {% if user.testee.group.name %}
 Sabvollar toifasi: <b>{{ user.testee.group.name }}</b><br>
-Savollarni faqat o'z bilimlaringizga tayangan xolda yeching<br>
-
-<p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati.</p>
 
 {% if exams %}
+<p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati.</p>
 <form action="{% url 'start' %}" method="POST">
 
     {% for exam in exams %}
         <input type="radio" name="examid" id="exam{{ exam.id }}" value="{{ exam.id }}"
                {% if forloop.counter == 1 %} checked="checked" {% endif %}>
         <label for="exam{{ exam.id }}">{{ exam.start}}</label>
+        <p>Imtihon davomiyligi <span id="time{{ forloop.counter }}"></span>{{ exam.hours }} </p>
+        <p>{{ exam.description|default:"" }}</p>
     {% endfor %}
 
-<p>Agar tayyot bo'lsangiz boshlash tugmasini bosing.</p>
+<p>Agar tayyot bo'lsangiz Davom ettirish tugmasini bosing.</p>
 
     {% csrf_token %}
 
-<input type="submit" value="Boshlash" />
+<input type="submit" value="Davom ettirish" />
 </form>
-
-
+{% else %}
+<p>Hozirda Siz uchun imtihonlar belgilanmagan</p>
 {% endif %}
 
 {% else %}
@@ -33,3 +33,10 @@ Sizda Savollar toifasi o'rnatilmagan. Iltimos Administrator (033) ga murojat qil
 {% else %}
   <a href="/login/">Iltimos birinchi tizimga kiring.</a>
 {% endif %}
+<script src="/static/time.js"></script>
+<script>
+  {% for exam in exams %}
+       var time{{ forloop.counter }} = timeToString({{ exam.test_time.seconds }});
+       document.getElementById('time{{ forloop.counter }}').innerHTML = time{{ forloop.counter }};
+  {% endfor %}
+</script>
