@@ -13,7 +13,7 @@ def seconds(time):
 @login_required
 def index(request):
     if 'end_time' in request.session and request.session['end_time']>seconds(timezone.now()):
-        return HttpResponseRedirect(reverse('test'))
+        return HttpResponseRedirect(reverse('test', args=(1,)))
     exams = None
     if hasattr(request.user.testee, 'group'):
         group = request.user.testee.group
@@ -41,10 +41,10 @@ def start(request):
     end_time = seconds(timezone.now()+exam.test_time)
     request.session['end_time']   = end_time
     request.session.set_expiry(end_time+600)
-    return HttpResponseRedirect(reverse('test'))
+    return HttpResponseRedirect(reverse('test', args=(1,)))
 
 @login_required
-def test(request):
+def test(request, question_no):
     if 'end_time' not in request.session:
         return HttpResponseRedirect(reverse('index'))
     seconds_left = request.session['end_time'] - seconds(timezone.now())
@@ -57,20 +57,28 @@ def test(request):
     response      = Response.objects.get(pk=response_id)
     if response.is_finished:
         return HttpResponseRedirect(reverse('finish'))
-    if 'question_no' not in request.session:
-        request.session['question_no'] = 0
-    question_no   = request.session['question_no']
-    next_question = response.questions.all()[question_no]
-    type          = "checkbox" if next_question.is_multiple_choice else "radio"
+    if question_no is None:
+        question_no = 1
+    question_count= response.questions.count()
+    question = response.questions.all()[question_no-1]
+    type     = "checkbox" if question.is_multiple_choice else "radio"
+    question_set = [False]*question_count
+    sc = SelectedChoice.objects.filter(response=response)
+    for c in sc:
+        question_set[c.number-1] = True
+    choosen = sc.filter(number=question_no).values_list('choice', flat=True)
     return render(request, 'test.html', {'time_left': seconds_left,
-                                         'question':next_question,
-                                         'question_no': question_no+1,
+                                         'question':question,
+                                         'questions': question_set,
+                                         'prev': question_no-1,
+                                         'question_no': question_no,
+                                         'next':question_no+1 if question_no != question_count else None,
+                                         'choosen': choosen,
                                          'type':type})
 
 
 @login_required
-def choose(request):
-    question_no   = request.session.get('question_no', None)
+def choose(request, question_no):
     response_id   = request.session.get('responseid', None)
     response = get_object_or_404(Response, id=response_id)
     choices = request.POST.getlist('choice')
@@ -79,37 +87,46 @@ def choose(request):
             'error_message': 'Javob tanlanmadi',
         })
     else:
+        SelectedChoice.objects.filter(response=response, number=question_no).delete()
         for choice in choices:
-            SelectedChoice.objects.create(testee=request.user.testee,
+            SelectedChoice.objects.create(number=question_no,
                                           response=response,
                                           choice_id=choice)
-        if question_no<response.questions.count()-1:
-            request.session['question_no'] += 1
-            return HttpResponseRedirect(reverse('test'))
+        if question_no<response.questions.count():
+            question_no += 1
+            return HttpResponseRedirect(reverse('test', args=(question_no,)))
         else:
-            response.end_time = timezone.now()
-            response.save()
-            return HttpResponseRedirect(reverse('finish'))
+            return HttpResponseRedirect(reverse('confirm'))
+
+
+@login_required
+def confirm(request):
+    response_id   = request.session.get('responseid', None)
+    response = get_object_or_404(Response, id=response_id)
+    choices  = response.choices.all()
+    questions= response.questions.all()
+    question_set = []
+    for question in questions:
+        question_set += [{
+            'text': question.text,
+            'choice': choices.filter(question=question).values_list('text', flat=True)
+        }]
+    return render(request, 'confirm.html', {'question_set':question_set,})
 
 
 @login_required
 def finish(request):
-    question_no   = request.session.get('question_no', None)
     response_id   = request.session.get('responseid', None)
     response = get_object_or_404(Response, id=response_id)
-    if question_no>=response.questions.count()-1:
-        mark    =response.choices.aggregate(Sum('mark'))['mark__sum']
-        response.is_finished = True
-        response.save()
-        del request.session['question_no']
-        del request.session['responseid']
-        del request.session['end_time']
-        return render(request, 'finish.html', {'mark':mark})
-    else:
-        return HttpResponseRedirect(reverse('test'))
+    mark    =response.choices.aggregate(Sum('mark'))['mark__sum']
+    response.is_finished = True
+    response.end_time = timezone.now()
+    response.save()
+    del request.session['responseid']
+    del request.session['end_time']
+    return render(request, 'finish.html', {'mark':mark})
+
 
 @login_required
 def tester(request):
     return render(request, 'tester.html')
-
-

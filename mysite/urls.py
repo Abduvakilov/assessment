@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', auth_views.login, name='login'),
     path('logout/', auth_views.logout, name='logout'),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]

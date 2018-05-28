@@ -1,0 +1,13 @@
+<ol>
+{% for question in question_set %}
+    <li>{{question.text}}</li><a href="{% url 'test' forloop.counter %}">O'zgartirish</a>
+    <ul>
+    {% if question.choice %}{% for choice in question.choice %}
+        <li>{{choice}}</li>
+    {% endfor %}{% else %}
+        <p>Tanlanmagan</p>
+        {% endif %}
+    </ul>
+{% endfor %}
+</ol>
+<a href="{% url 'finish' %}">Tasdiqlash !</a>

@@ -15,11 +15,11 @@ Sabvollar toifasi: <b>{{ user.testee.group.name }}</b><br>
         <p>{{ exam.description|default:"" }}</p>
     {% endfor %}
 
-<p>Agar tayyot bo'lsangiz Davom ettirish tugmasini bosing.</p>
+<p>Agar tayyot bo'lsangiz Boshlash tugmasini bosing.</p>
 
     {% csrf_token %}
 
-<input type="submit" value="Davom ettirish" />
+<input type="submit" value="Boshlash" />
 </form>
 {% else %}
 <p>Hozirda Siz uchun imtihonlar belgilanmagan</p>

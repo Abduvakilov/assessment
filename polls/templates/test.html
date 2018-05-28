@@ -4,14 +4,26 @@
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'tanla' %}" method="post">
+<form action="{% url 'tanla' question_no %}" method="post">
 {% csrf_token %}
 {% for choice in question.choice_set.all %}
-    <input type="{{type}}" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    <label for="choice{{ forloop.counter }}">{{ choice.text }}</label><br />
+    <input type="{{type}}" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}"
+           {% for c in choosen %}
+               {% if choice.id == c %} checked="checked" {% endif %}
+           {% endfor %}/>
+    <label for="choice{{ forloop.counter }}">{{ choice.text }}</label><br>
 {% endfor %}
+    <p>{{error_message|default:""}}</p>
+{% if prev %}<a href="{% url 'test' prev %}">Avvalgisi</a>{% endif %}
 <input type="submit" value="Tanla" />
+{% if next %}<a href="{% url 'test' next %}">Keyingisi</a>{% endif %}
 </form>
-
+{% for question in questions %}
+{% if question %}
+<a href="{% url 'test' forloop.counter %}"><strong>{{ forloop.counter }}</strong></a>
+{% else %}
+<a href="{% url 'test' forloop.counter %}">{{ forloop.counter }}</a>
+{% endif %}
+{% endfor %}
 <script>var distance={{ time_left }};</script>
 <script src="/static/time.js"></script>

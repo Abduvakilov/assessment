@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
+
+    # 'autofixture', # Fills base with random content To be removed
 ]
 
 MIDDLEWARE = [
@@ -48,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware', # Multiple Language
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -63,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
             ],
         },
     },
@@ -118,6 +122,17 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = (
+    '/polls/locale/',
+)
+
+USE_I18N = True
+
+ugettext = lambda s: s
+LANGUAGES = (
+    ('uz', ugettext('Uzbek')),
+    ('ru', ugettext('Russian')),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -130,3 +145,4 @@ STATICFILES_DIRS = (
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 LOGOUT_REDIRECT_URL = '/'
+

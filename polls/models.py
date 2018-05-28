@@ -77,8 +77,8 @@ class Response(models.Model):
 
 class SelectedChoice(models.Model):
     time     = models.DateTimeField('Vaqt', auto_now=True)
+    number   = models.PositiveSmallIntegerField()
     choice   = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    testee   = models.ForeignKey(Testee, on_delete=models.CASCADE)
-    response = models.OneToOneField(Response, on_delete=models.SET_NULL, null=True)
+    response = models.ForeignKey(Response, on_delete=models.SET_NULL, null=True)
     def __str__(self):
-        return self.testee.user.username
+        return self.response.testee.user.username
