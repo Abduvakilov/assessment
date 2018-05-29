@@ -1,42 +1,35 @@
-{% if user.is_authenticated %}
-Siz <b>{{ user.get_username }}</b> sifatida kirdingiz.<br>
-{% if user.testee.group.name %}
-Sabvollar toifasi: <b>{{ user.testee.group.name }}</b><br>
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron">
 
-{% if exams %}
-<p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati.</p>
-<form action="{% url 'start' %}" method="POST">
+    {% if exams %}
+    <p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati.</p>
+    <form action="{% url 'start' %}" method="POST">
 
-    {% for exam in exams %}
+        {% for exam in exams %}
         <input type="radio" name="examid" id="exam{{ exam.id }}" value="{{ exam.id }}"
                {% if forloop.counter == 1 %} checked="checked" {% endif %}>
-        <label for="exam{{ exam.id }}">{{ exam.start}}</label>
-        <p>Imtihon davomiyligi <span id="time{{ forloop.counter }}"></span>{{ exam.hours }} </p>
-        <p>{{ exam.description|default:"" }}</p>
-    {% endfor %}
+        <label for="exam{{ exam.id }}">{{ exam.start}} - {{ exam.deadline}}</label>
+        <p>Imtihon davomiyligi: <span class="glyphicon glyphicon-time"></span> <span id="time{{ forloop.counter }}"></span>{{ exam.hours }} </p>
+        {% if exam.description %}<p>{{ exam.description }}</p>{% endif %}
+        {% endfor %}
 
-<p>Agar tayyot bo'lsangiz Boshlash tugmasini bosing.</p>
+        <p>Agar tayyot bo'lsangiz Boshlash tugmasini bosing.</p>
 
-    {% csrf_token %}
-
-<input type="submit" value="Boshlash" />
-</form>
-{% else %}
-<p>Hozirda Siz uchun imtihonlar belgilanmagan</p>
-{% endif %}
-
-{% else %}
-Sizda Savollar toifasi o'rnatilmagan. Iltimos Administrator (033) ga murojat qiling<br>
-{% endif %}
-
-  <a href="/logout/">Chiqish.</a>
-{% else %}
-  <a href="/login/">Iltimos birinchi tizimga kiring.</a>
-{% endif %}
-<script src="/static/time.js"></script>
+        {% csrf_token %}
+        <div class="text-center">
+            <input type="submit" value="Boshlash" class="btn btn-lg btn-success" />
+        </div>
+    </form>
+    {% else %}
+    <p>Hozirda Siz uchun imtihonlar belgilanmagan</p>
+    {% endif %}
+</div>
+<script src="/static/js/time.js"></script>
 <script>
   {% for exam in exams %}
        var time{{ forloop.counter }} = timeToString({{ exam.test_time.seconds }});
        document.getElementById('time{{ forloop.counter }}').innerHTML = time{{ forloop.counter }};
   {% endfor %}
 </script>
+{% endblock %}

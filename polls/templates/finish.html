@@ -1,7 +1,20 @@
+<p>Ism: {{user.first_name}} {{user.last_name}}</p>
 {% if error == 408 %}
 <p>Vaqtingiz tugadi. Rahmat</p>
 {% elif mark %}
 <p>Rahmat. Test tugadi</p>
-<p>Siz {{ mark }} bal to'pladingiz</p>
+<p>Test natijasi: {{ mark }}</p>
 {% endif %}
+<ol>
+{% for question in question_set %}
+    <li>{{question.text}}</li><p>Javobingiz: <a href="{% url 'test' forloop.counter %}">O'zgartirish</a></p>
+    <ul>
+    {% if question.choice %}{% for choice in question.choice %}
+        <li>{{choice.text}}<span> - {{choice.mark}} ball</span> </li>
+    {% endfor %}{% else %}
+        <p>Tanlanmagan</p>
+        {% endif %}
+    </ul>
+{% endfor %}
+</ol>
 <p><a href="{% url 'index' %}">Bosh sahifaga o'tish</a></p>

@@ -1,29 +1,45 @@
-
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.col-xs-1 {
+    width: 3.33333333%;
+}
+label {
+    font-weight:400;
+}
+</style>
 <p id="time_left">...</p>
 <h3>{{ question_no }}. {{ question.text }}</h3>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <form action="{% url 'tanla' question_no %}" method="post">
-{% csrf_token %}
-{% for choice in question.choice_set.all %}
+    {% csrf_token %}
+    {% for choice in question.choice_set.all %}
     <input type="{{type}}" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}"
            {% for c in choosen %}
-               {% if choice.id == c %} checked="checked" {% endif %}
+           {% if choice.id == c %} checked="checked" {% endif %}
            {% endfor %}/>
     <label for="choice{{ forloop.counter }}">{{ choice.text }}</label><br>
-{% endfor %}
+    {% endfor %}
     <p>{{error_message|default:""}}</p>
-{% if prev %}<a href="{% url 'test' prev %}">Avvalgisi</a>{% endif %}
-<input type="submit" value="Tanla" />
-{% if next %}<a href="{% url 'test' next %}">Keyingisi</a>{% endif %}
+    <div class="text-center"><input type="submit" class="btn btn-success" value="Tanla" /></div>
 </form>
-{% for question in questions %}
-{% if question %}
-<a href="{% url 'test' forloop.counter %}"><strong>{{ forloop.counter }}</strong></a>
-{% else %}
-<a href="{% url 'test' forloop.counter %}">{{ forloop.counter }}</a>
-{% endif %}
-{% endfor %}
+<div class="row">
+    {% if prev %}<div class="col-xs-2"><a class="btn btn-default btn-sm" href="{% url 'test' prev %}">Avvalgisi</a></div> {% endif %}
+    {% for question in questions %}
+    <div class="col-xs-1">
+        <a href="{% url 'test' forloop.counter %}">
+            {% if question %}
+            <b>{{ forloop.counter }}</b>
+            {% else %}
+            {{ forloop.counter }}
+        </a>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% if next %}<a class="btn btn-default btn-sm pull-right" href="{% url 'test' next %}">Keyingisi</a>{% endif %}
+</div>
 <script>var distance={{ time_left }};</script>
 <script src="/static/time.js"></script>
+{% endblock %}

@@ -1,6 +1,6 @@
 <ol>
 {% for question in question_set %}
-    <li>{{question.text}}</li><a href="{% url 'test' forloop.counter %}">O'zgartirish</a>
+    <li>{{question.text}}</li><p>Javobingiz: <a href="{% url 'test' forloop.counter %}">O'zgartirish</a></p>
     <ul>
     {% if question.choice %}{% for choice in question.choice %}
         <li>{{choice}}</li>

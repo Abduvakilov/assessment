@@ -122,9 +122,18 @@ def finish(request):
     response.is_finished = True
     response.end_time = timezone.now()
     response.save()
-    del request.session['responseid']
-    del request.session['end_time']
-    return render(request, 'finish.html', {'mark':mark})
+    choices  = response.choices.all()
+    questions= response.questions.all()
+    question_set = []
+    for question in questions:
+        question_set += [{
+            'text': question.text,
+            'choice': choices.filter(question=question)
+        }]
+    # del request.session['responseid']
+    # del request.session['end_time']
+    return render(request, 'finish.html', {'mark':mark,
+                                           'question_set':question_set,})
 
 
 @login_required
