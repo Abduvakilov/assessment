@@ -7,6 +7,18 @@
 label {
     font-weight:400;
 }
+.pages a {
+    padding: 10px;
+}
+.pages {
+    margin-top: 30px;
+}
+.done {
+    border-bottom: 5px solid;
+}
+.container {
+    max-width: 800px;
+}
 </style>
 <p id="time_left">...</p>
 <h3>{{ question_no }}. {{ question.text }}</h3>
@@ -25,20 +37,19 @@ label {
     <p>{{error_message|default:""}}</p>
     <div class="text-center"><input type="submit" class="btn btn-success" value="Tanla" /></div>
 </form>
-<div class="row">
-    {% if prev %}<div class="col-xs-2"><a class="btn btn-default btn-sm" href="{% url 'test' prev %}">Avvalgisi</a></div> {% endif %}
-    {% for question in questions %}
-    <div class="col-xs-1">
-        <a href="{% url 'test' forloop.counter %}">
-            {% if question %}
-            <b>{{ forloop.counter }}</b>
-            {% else %}
+<div class="text-center pages">
+    {% if prev %}<a class="btn btn-default btn-sm" href="{% url 'test' prev %}">Avvalgisi</a>{% endif %}
+    <!--<div class="pages">-->
+        {% for question in questions %}
+        <!--<div class="col-xs-1">-->
+        <a {% if question %}class="done"{% endif %} href="{% url 'test' forloop.counter %}">
             {{ forloop.counter }}
         </a>
-        {% endif %}
-    </div>
+
+    <!--</div>-->
     {% endfor %}
-    {% if next %}<a class="btn btn-default btn-sm pull-right" href="{% url 'test' next %}">Keyingisi</a>{% endif %}
+    <!--</div>-->
+    {% if next %}<a class="btn btn-default btn-sm" href="{% url 'test' next %}">Keyingisi</a>{% endif %}
 </div>
 <script>var distance={{ time_left }};</script>
 <script src="/static/time.js"></script>
