@@ -1,13 +1,19 @@
-<ol>
-{% for question in question_set %}
-    <li>{{question.text}}</li><p>Javobingiz: <a href="{% url 'test' forloop.counter %}">O'zgartirish</a></p>
-    <ul>
-    {% if question.choice %}{% for choice in question.choice %}
-        <li>{{choice}}</li>
-    {% endfor %}{% else %}
-        <p>Tanlanmagan</p>
-        {% endif %}
-    </ul>
-{% endfor %}
-</ol>
-<a href="{% url 'finish' %}">Tasdiqlash !</a>
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-in">
+    <h3>Iltimos Javoblaringizni ko'rib chiqing va tasdiqlang</h3>
+    <ol>
+        {% for question in question_set %}
+        <li><b>{{question.text}}</b></li><span>Javobingiz: <a class="pull-right" href="{% url 'test' forloop.counter %}"><span class="glyphicon glyphicon-edit"></span> Tahrirlash</a></span>
+        <ul>
+            {% if question.choice %}{% for choice in question.choice %}
+            <li>{{choice}}</li>
+            {% endfor %}{% else %}
+            <span class="red"><span class="glyphicon glyphicon-unchecked"></span> Tanlanmagan</span>
+            {% endif %}
+        </ul><br>
+        {% endfor %}
+    </ol>
+    <div class="text-center"><a class="btn btn-primary" href="{% url 'finish' %}">Tasdiqlash !</a></div>
+</div>
+{% endblock %}

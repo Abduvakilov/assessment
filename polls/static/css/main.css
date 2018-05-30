@@ -1,0 +1,48 @@
+body {
+    background-color:#fafafa;
+}
+label {
+    font-weight:400;
+}
+.pages a {
+    padding: 6px;
+}
+.pages {
+    margin-top: 30px;
+}
+.done {
+    border-bottom: 5px solid;
+}
+.container {
+    max-width: 1000px;
+}
+.card-in {
+    padding: 20px;
+}
+#bar {
+    height: 6px;
+    background-color: red;
+    border-radius: 8px 8px 0 0;
+    display:block;
+}
+#time_left {
+    padding-right:10px;
+}
+.green {
+    color: green;
+}
+.red {
+    color:red;
+}
+footer {
+    margin-top: 10px;
+    background-color: #eee;
+    padding: 15px 0;
+}
+.card {
+    max-width: 800px;
+    background:white;
+    box-shadow: 0 8px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 8px;
+    margin: 10px auto;
+}

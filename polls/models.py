@@ -60,12 +60,12 @@ class Question(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     text     = models.CharField(max_length=255)
-    mark     = models.PositiveSmallIntegerField(default=0)
+    mark     = models.SmallIntegerField(default=0)
     def __str__(self):
         return self.text
 
 class Response(models.Model):
-    start_time  = models.DateTimeField("Test Boshlangan Vaqt", auto_now=True)
+    start_time  = models.DateTimeField("Test Boshlangan Vaqt", default=timezone.now)
     end_time    = models.DateTimeField('Tugallangan vaqt', null=True)
     is_finished = models.BooleanField(default=False)
     testee      = models.ForeignKey(Testee, on_delete=models.CASCADE)
@@ -76,7 +76,7 @@ class Response(models.Model):
         return self.testee.user.username+"'s response"
 
 class SelectedChoice(models.Model):
-    time     = models.DateTimeField('Vaqt', auto_now=True)
+    time     = models.DateTimeField('Vaqt', default=timezone.now)
     number   = models.PositiveSmallIntegerField()
     choice   = models.ForeignKey(Choice, on_delete=models.CASCADE)
     response = models.ForeignKey(Response, on_delete=models.SET_NULL, null=True)

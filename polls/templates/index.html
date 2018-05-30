@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="jumbotron">
-
+<div class="card-in">
     {% if exams %}
     <p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati.</p>
     <form action="{% url 'start' %}" method="POST">
@@ -25,11 +24,9 @@
     <p>Hozirda Siz uchun imtihonlar belgilanmagan</p>
     {% endif %}
 </div>
-<script src="/static/js/time.js"></script>
-<script>
-  {% for exam in exams %}
-       var time{{ forloop.counter }} = timeToString({{ exam.test_time.seconds }});
-       document.getElementById('time{{ forloop.counter }}').innerHTML = time{{ forloop.counter }};
+{% endblock %}
+{% block script %}<script>{% for exam in exams %}
+       document.getElementById('time{{ forloop.counter }}').innerHTML = timeToString({{ exam.test_time.seconds }});
   {% endfor %}
 </script>
 {% endblock %}

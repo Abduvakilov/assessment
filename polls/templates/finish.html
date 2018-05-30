@@ -1,20 +1,29 @@
-<p>Ism: {{user.first_name}} {{user.last_name}}</p>
-{% if error == 408 %}
-<p>Vaqtingiz tugadi. Rahmat</p>
-{% elif mark %}
-<p>Rahmat. Test tugadi</p>
-<p>Test natijasi: {{ mark }}</p>
-{% endif %}
-<ol>
-{% for question in question_set %}
-    <li>{{question.text}}</li><p>Javobingiz: <a href="{% url 'test' forloop.counter %}">O'zgartirish</a></p>
-    <ul>
-    {% if question.choice %}{% for choice in question.choice %}
-        <li>{{choice.text}}<span> - {{choice.mark}} ball</span> </li>
-    {% endfor %}{% else %}
-        <p>Tanlanmagan</p>
-        {% endif %}
-    </ul>
-{% endfor %}
-</ol>
-<p><a href="{% url 'index' %}">Bosh sahifaga o'tish</a></p>
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-in">
+    {% if error == 408 %}
+    <h3>Testga ajratilgan vaqt tugadi</h3>
+    {% else %}
+    <h3>Test qabul qilindi</h3>
+    {% endif %}
+    <br>Ism: {{user.first_name}} {{ user.last_name}}<br>
+    Testga berilgan vaqt: {{ response.exam.test_time }} (soat:daqiqa:soniya)<br>
+    Test boshlangan vaqt: {{ response.start_time }}<br>
+    Test tugallangan vaqt: {{ response.end_time }}<br>
+    Sarflangan vaqt: {{ time_spent }} (soat:daqiqa:soniya)</br>
+    <p>Test natijasi: {{ mark }}</p>
+    <ol>
+        {% for question in question_set %}
+        <li><b>{{question.text}}</b></li><span>Javobingiz: </span>
+        <ul>
+            {% if question.choice %}{% for choice in question.choice %}
+            <li>{{choice.text}}<span></span> - {% if choice.mark > 0 %}<span class="glyphicon glyphicon-ok green"></span>{% endif %} {{choice.mark}} ball</li>
+            {% endfor %}{% else %}
+            <span><span class="glyphicon glyphicon-unchecked"></span> Tanlanmagan - 0 ball</span>
+            {% endif %}
+        </ul><br>
+        {% endfor %}
+    </ol>
+    <div class="text-center"><a class="btn btn-default" href="{% url 'index' %}">Bosh sahifaga o'tish</a></div>
+</div>
+{% endblock %}
