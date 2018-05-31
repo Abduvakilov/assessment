@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import *
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
+# from django.utils import datetime as datetime
 from datetime import datetime
 from django.db.models import Sum
 
@@ -20,8 +20,8 @@ def index(request):
     if hasattr(request.user.testee, 'group'):
         group = request.user.testee.group
         exams = Exam.objects.filter(groups=group,
-                                    start__lt=timezone.now(),
-                                    deadline__gt=timezone.now()).order_by('start')
+                                    start__lt=datetime.now(),
+                                    deadline__gt=datetime.now()).order_by('start')
     return render(request, 'index.html', {'exams':exams})
 
 
@@ -34,11 +34,11 @@ def start(request):
     testee = request.user.testee
     question_set = testee.group.random_questions()
     exam   = Exam.objects.get(pk=request.POST.get("examid"))
-    response = Response.objects.create(start_time=timezone.now(), testee=testee,
+    response = Response.objects.create(start_time=datetime.now(), testee=testee,
                                        exam=exam)
     response.questions.set(question_set)
     request.session['responseid'] = response.pk
-    end_time = seconds(timezone.now()+exam.test_time)
+    end_time = seconds(datetime.now() + exam.test_time)
     request.session['end_time']   = end_time
     request.session.set_expiry(end_time+600)
     return HttpResponseRedirect(reverse('test', args=(1,)))
@@ -49,7 +49,7 @@ def test(request, question_no):
     if 'end_time' not in request.session:
         return HttpResponseRedirect(reverse('index'))
     end_time     = request.session['end_time']
-    seconds_left = end_time - seconds(timezone.now())
+    seconds_left = end_time - seconds(datetime.now())
     if seconds_left<0:
         return render(request, 'finish.html', {
             'error': 408, # time out
@@ -69,7 +69,8 @@ def test(request, question_no):
     for c in sc:
         question_set[c.number-1] = True
     choosen = sc.filter(number=question_no).values_list('choice', flat=True)
-    return render(request, 'test.html', {'time_left': seconds_left,
+    return render(request, 'test.html', {'title':'{}-savol'.format(question_no),
+                                         'time_left': seconds_left,
                                          'test_time': response.exam.test_time.total_seconds(),
                                          'question':question,
                                          'questions': question_set,
@@ -114,7 +115,8 @@ def confirm(request):
             'text': question.text,
             'choice': choices.filter(question=question).values_list('text', flat=True)
         }]
-    return render(request, 'confirm.html', {'question_set':question_set,})
+    return render(request, 'confirm.html', {'title':'Testni tasdiqlash',
+                                            'question_set':question_set,})
 
 
 @login_required
@@ -124,9 +126,12 @@ def finish(request):
     mark     = response.choices.aggregate(Sum('mark'))['mark__sum']
     if response.is_finished == False:
         response.is_finished = True
-        response.end_time = timezone.now()
+        response.end_time = datetime.now()
         response.save()
     time_spent = "{}:{}:{}".format(int((response.end_time-response.start_time).total_seconds()//3600), int((response.end_time-response.start_time).total_seconds()//60%60), int((response.end_time-response.start_time).total_seconds()%60))
+    test_day   = response.start_time.strftime('%d-%B, %Y-yil')
+    start_time = response.start_time.strftime('%-H:%M:%S')
+    end_time = response.end_time.strftime('%-H:%M:%S')
     choices  = response.choices.all()
     questions= response.questions.all()
     question_set = []
@@ -137,9 +142,13 @@ def finish(request):
         }]
     # del request.session['responseid']
     # del request.session['end_time']
-    return render(request, 'finish.html', {'mark':mark,
+    return render(request, 'finish.html', {'title':'Test natijasi',
+                                           'mark':mark,
                                            'question_set':question_set,
                                            'response':response,
+                                           'test_day':test_day,
+                                           'start_time':start_time,
+                                           'end_time':end_time,
                                            'time_spent':time_spent})
 
 

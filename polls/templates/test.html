@@ -9,11 +9,11 @@
     <form action="{% url 'tanla' question_no %}" method="post">
         {% csrf_token %}
         {% for choice in question.choice_set.all %}
-        <input type="{{type}}" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}"
+        <div class="{{type}}"><label><input type="{{type}}" name="choice" value="{{ choice.id }}"
                {% for c in choosen %}
                {% if choice.id == c %} checked="checked" {% endif %}
                {% endfor %} />
-        <label for="choice{{ forloop.counter }}">{{ choice.text }}</label><br>
+        {{ choice.text }}</label><br></div>
         {% endfor %}
         <p>{{error_message|default:""}}</p>
         <div class="text-center"><div class="red" id="valErr"></div><input type="submit" class="btn btn-success" value="Tanla" onclick="return check()"/></div>

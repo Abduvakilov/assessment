@@ -8,10 +8,11 @@
     {% endif %}
     <br>Ism: {{user.first_name}} {{ user.last_name}}<br>
     Testga berilgan vaqt: {{ response.exam.test_time }} (soat:daqiqa:soniya)<br>
-    Test boshlangan vaqt: {{ response.start_time }}<br>
-    Test tugallangan vaqt: {{ response.end_time }}<br>
+    Test kuni: {{ test_day }}<br>
+    Test boshlangan vaqt: {{ start_time }}<br>
+    Test tugallangan vaqt: {{ end_time }}<br>
     Sarflangan vaqt: {{ time_spent }} (soat:daqiqa:soniya)</br>
-    <p>Test natijasi: {{ mark }}</p>
+    <p>Test natijasi: {{ mark }} ball</p>
     <ol>
         {% for question in question_set %}
         <li><b>{{question.text}}</b></li><span>Javobingiz: </span>

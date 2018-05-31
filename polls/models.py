@@ -33,12 +33,14 @@ class Exam(models.Model):
     start    = models.DateTimeField('Boshlanish vaqti', default=timezone.now)
     deadline = models.DateTimeField('Tugash vaqti')
     test_time= models.DurationField('Test vaqti')
+    oneTime  = models.BooleanField('Faqat bir marotaba topshiriladi', default=True)
     description=models.CharField(max_length=512, null=True, blank=True)
     def __str__(self):
         return self.start.strftime("%d %b %Y")
 
 class Testee(models.Model):
     user     = models.OneToOneField(User, on_delete=models.CASCADE)
+    askName  = models.BooleanField("Har safar ism So'ralsin", default=False)
     group    = models.ForeignKey(TesteeGroup, on_delete=models.SET_NULL, null=True)
     language = models.PositiveSmallIntegerField(choices=((0,'uz'),
                                                          (1,'ru'),
