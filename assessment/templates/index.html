@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-in">
+    {% if exams %}
+    <p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:</p>
+    <form action="{% url 'start' %}" method="POST">
+        <table class="table"><tr><th>Tanlash uchun</th><th>Mavzular</th><th>Oxirgi muhlat</th><th>Davomiyligi</th><th>Tasnifi</th></tr>
+
+            {% for exam in exams %}
+            <tr>
+                <td><input id="exam{{forloop.counter}}" type="radio" name="examid" value="{{ exam.id }}"
+                           {% if forloop.counter == 1 %} checked="checked" {% endif %}></td>
+                <td><label for="exam{{forloop.counter}}">{% for category in user.testee.group.category.all %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</label></td>
+                <td><label for="exam{{forloop.counter}}">{{ exam.deadline}}</label></td>
+                <td><label for="exam{{forloop.counter}}"><span id="time{{ forloop.counter }}"></span></label></td>
+                <td><label for="exam{{forloop.counter}}">{{ exam.description|default:"..." }}</label></td>
+            </tr>
+
+            {% endfor %}
+
+
+        </table>
+        <p>Agar tayyot bo'lsangiz Boshlash tugmasini bosing.</p>
+
+        {% csrf_token %}
+        <div class="text-center">
+            <input type="submit" value="Boshlash" class="btn btn-lg btn-success" />
+        </div>
+    </form>
+    {% else %}
+    <p>Hozirda Siz uchun imtihonlar belgilanmagan</p>
+    {% endif %}
+</div>
+{% endblock %}
+{% block script %}<script>{% for exam in exams %}
+       document.getElementById('time{{ forloop.counter }}').innerHTML = timeToString({{ exam.test_time.seconds }});
+  {% endfor %}
+</script>
+{% endblock %}

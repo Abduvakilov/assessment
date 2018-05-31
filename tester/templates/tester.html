@@ -1,0 +1,12 @@
+{% extends 'Tbase.html' %}
+{% block content %}
+<div class="card-in">
+
+<ul class="list-group">
+  <li class="list-group-item"><a href="{% url 'users' %}">Foydalanuvchilar</a></li>
+  <li class="list-group-item"><a href="{% url 'qa' %}">Savol va Variantlar</a></li>
+  <li class="list-group-item"><a href="{% url 'qc' %}">Savol toifalari</a></li>
+</ul>
+
+</div>
+{% endblock %}

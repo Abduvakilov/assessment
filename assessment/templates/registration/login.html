@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="uz">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Testga kirish</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <style>
+        .card {
+            max-width: 400px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-in">
+            <form method="post" class="form-horizontal" action="{% url 'login' %}">
+                {% csrf_token %}
+                <h3 class="text-center text-muted">Testga kirish</h3>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><b>Login</b></label>
+                    <div class="col-sm-10"><input class="form-control" type="text" name="username" autofocus required></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"><b>Parol</b></label>
+                    <div class="col-sm-10"><input class="form-control" type="password" name="password" required></div>
+                </div>
+                {% if form.errors %}
+                <p class="red">Login yoki parol xato kiritildi</p>
+                {% endif %}
+                <div class="text-center">
+                    <input class="btn btn-success" type="submit" value="Kirish" />
+                    <input type="hidden" name="next" value="{{ next }}" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
