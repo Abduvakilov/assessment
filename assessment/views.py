@@ -15,7 +15,7 @@ def index(request):
     if 'responseid' in request.session:
         response = Response.objects.get(pk=request.session['responseid'])
         if response.is_finished is False:
-            return HttpResponseRedirect(reverse('test', args=(1,)))
+            return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
     exams = None
     if hasattr(request.user.testee, 'group'):
         group = request.user.testee.group
@@ -30,7 +30,7 @@ def start(request):
     if 'responseid' in request.session:
         response = Response.objects.get(pk=request.session['responseid'])
         if response.is_finished is False:
-            return HttpResponseRedirect(reverse('test', args=(1,)))
+            return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
     testee = request.user.testee
     question_set = testee.group.random_questions()
     exam   = Exam.objects.get(pk=request.POST.get("examid"))
@@ -41,22 +41,22 @@ def start(request):
     end_time = seconds(timezone.now() + exam.test_time)
     request.session['end_time']   = end_time
     request.session.set_expiry(end_time+600)
-    return HttpResponseRedirect(reverse('test', args=(1,)))
+    return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
 
 
 @login_required
 def test(request, question_no):
     if 'end_time' not in request.session:
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('assessment:index'))
     end_time     = request.session['end_time']
     seconds_left = end_time - seconds(timezone.now())
     if seconds_left<0:
-        return HttpResponseRedirect(reverse('confirm')) # time out
+        return HttpResponseRedirect(reverse('assessment:confirm')) # time out
 
     response_id   = request.session.get('responseid', None)
     response      = Response.objects.get(pk=response_id)
     if response.is_finished:
-        return HttpResponseRedirect(reverse('finish'))
+        return HttpResponseRedirect(reverse('assessment:finish'))
     if question_no is None:
         question_no = 1
     question_count= response.questions.count()
@@ -69,7 +69,7 @@ def test(request, question_no):
     choosen = sc.filter(number=question_no).values_list('choice', flat=True)
     return render(request, 'test.html', {'title':'{}-savol'.format(question_no),
                                          'time_left': seconds_left,
-                                         'test_time': response.exam.test_time.total_seconds(),
+                                         'test_time': int(response.exam.test_time.total_seconds()),
                                          'question':question,
                                          'questions': question_set,
                                          'prev': question_no-1,
@@ -96,9 +96,9 @@ def choose(request, question_no):
                                           choice_id=choice)
         if question_no<response.questions.count():
             question_no += 1
-            return HttpResponseRedirect(reverse('test', args=(question_no,)))
+            return HttpResponseRedirect(reverse('assessment:test', args=(question_no,)))
         else:
-            return HttpResponseRedirect(reverse('confirm'))
+            return HttpResponseRedirect(reverse('assessment:confirm'))
 
 
 @login_required

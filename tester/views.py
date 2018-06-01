@@ -5,8 +5,8 @@ def user(request):
     return render(request, 'users.html')
 
 
-def qa(request):
+def question_answer(request):
     pass
 
-def qc(request):
+def question_category(request):
     pass

@@ -32,15 +32,15 @@ class Exam(models.Model):
     groups   = models.ManyToManyField(TesteeGroup)
     start    = models.DateTimeField('Boshlanish vaqti', default=timezone.now)
     deadline = models.DateTimeField('Tugash vaqti')
-    test_time= models.DurationField('Test vaqti (Soat:Daqiqa:Soniya)')
-    oneTime  = models.BooleanField('Faqat bir marotaba topshiriladi', default=True)
+    test_time= models.DurationField('Test davomiyligi (soat:daqiqa:soniya)')
+    one_time  = models.BooleanField('Faqat bir marotaba topshiriladi', default=True)
     description=models.CharField("Test tarifi", max_length=512, null=True, blank=True)
     def __str__(self):
         return self.start.strftime("%d %b %Y")
 
 class Testee(models.Model):
     user     = models.OneToOneField(User, on_delete=models.CASCADE)
-    askName  = models.BooleanField("Har safar ism So'ralsin", default=False)
+    ask_name  = models.BooleanField("Har safar ism So'ralsin", default=False)
     group    = models.ForeignKey(TesteeGroup, on_delete=models.SET_NULL, null=True)
     language = models.PositiveSmallIntegerField(choices=((0,'uz'),
                                                          (1,'ru'),
@@ -54,8 +54,8 @@ class Question(models.Model):
     image    = models.ImageField(upload_to="images", null=True, blank=True)
     pub_date = models.DateTimeField('Sana', auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
-    is_multiple_choice = models.BooleanField(default=False)
-    is_active= models.BooleanField(default=True)
+    is_multiple_choice = models.BooleanField('Muliple choice',default=False)
+    is_active= models.BooleanField('Faol', default=True)
     def __str__(self):
         return self.text
 

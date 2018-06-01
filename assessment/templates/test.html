@@ -3,10 +3,10 @@
 <div class="time"><span id="bar"></span><p id="time_left" class="text-right">...</p></div>
 <div class="card-in">
     <h3>{{ question_no }}. {{ question.text }}</h3>
-
+    {% if question.image %}<img class="img" src="{{ question.image.url }}">{% endif %}
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% else %}
 
-    <form action="{% url 'tanla' question_no %}" method="post">
+    <form action="{% url 'assessment:tanla' question_no %}" method="post">
         {% csrf_token %}
         {% for choice in question.choice_set.all %}
         <div class="{{type}}"><label><input type="{{type}}" name="choice" value="{{ choice.id }}"
@@ -20,13 +20,13 @@
     </form>
 
     <div class="text-center pages">
-        {% if prev %}<a class="btn btn-xs btn-default" href="{% url 'test' prev %}"><span class="glyphicon glyphicon-chevron-left"></span> Avvalgisi</a>{% endif %}
+        {% if prev %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' prev %}"><span class="glyphicon glyphicon-chevron-left"></span> Avvalgisi</a>{% endif %}
         {% for question in questions %}
-        <a {% if question %}class="done"{% endif %} href="{% url 'test' forloop.counter %}">
+        <a {% if question %}class="done"{% endif %} href="{% url 'assessment:test' forloop.counter %}">
             {{ forloop.counter }}
         </a>
         {% endfor %}
-        {% if next %}<a class="btn btn-xs btn-default" href="{% url 'test' next %}">Keyingisi <span class="glyphicon glyphicon-chevron-right"></span></a>{% endif %}
+        {% if next %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' next %}">Keyingisi <span class="glyphicon glyphicon-chevron-right"></span></a>{% endif %}
     </div>
 </div>
 <script>

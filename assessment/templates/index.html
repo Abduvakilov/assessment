@@ -3,7 +3,7 @@
 <div class="card-in">
     {% if exams %}
     <p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:</p>
-    <form action="{% url 'start' %}" method="POST">
+    <form action="{% url 'assessment:start' %}" method="POST">
         <table class="table"><tr><th>Tanlash uchun</th><th>Mavzular</th><th>Oxirgi muhlat</th><th>Davomiyligi</th><th>Tasnifi</th></tr>
 
             {% for exam in exams %}
