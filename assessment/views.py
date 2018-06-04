@@ -18,11 +18,16 @@ def index(request):
             return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
     exams = None
     if hasattr(request.user.testee, 'group'):
-        group = request.user.testee.group
-        exams = Exam.objects.filter(groups=group,
+        testee = request.user.testee
+        exams = Exam.objects.filter(groups=testee.group,
                                     start__lt=timezone.now(),
                                     deadline__gt=timezone.now()).order_by('start')
-    return render(request, 'index.html', {'exams':exams})
+        exams_with_no_response = exams.exclude(response__in=Response.objects.filter(testee=testee))
+        categories = testee.group.category.filter(language=testee.language)
+        if len(categories) == 0:
+            return render(request, 'index.html', {'error': 404}) #"Foydalanuvchi tiliga mos imtihonlar topilmadi"
+    return render(request, 'index.html', {'exams':exams_with_no_response,
+                                          'categories':categories,})
 
 
 @login_required
@@ -32,7 +37,7 @@ def start(request):
         if response.is_finished is False:
             return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
     testee = request.user.testee
-    question_set = testee.group.random_questions()
+    question_set = testee.group.random_questions(testee.language)
     exam   = Exam.objects.get(pk=request.POST.get("examid"))
     response = Response.objects.create(start_time=timezone.now(), testee=testee,
                                        exam=exam)
@@ -122,6 +127,8 @@ def finish(request):
     response_id   = request.session.get('responseid', None)
     response = get_object_or_404(Response, id=response_id)
     mark     = response.choices.aggregate(Sum('mark'))['mark__sum']
+    total_mark = response.questions.annotate(Max('choice__mark')).aggregate(Sum('choice__mark__max'))['choice__mark__max__sum']
+    mark_percent = '{}%'.format(mark*100//total_mark)
     if response.is_finished == False:
         response.is_finished = True
         response.end_time = timezone.now()
@@ -133,6 +140,8 @@ def finish(request):
     end_time   = timezone.make_naive(response.end_time).strftime('%-H:%M:%S')
     choices  = response.choices.all()
     questions= response.questions.all()
+    # max_marks = [question.choice_set.aggregate(Max('mark')) for question in questions]
+    # total_mark= sum(max_marks)
     question_set = []
     for question in questions:
         question_set += [{
@@ -143,6 +152,8 @@ def finish(request):
     # del request.session['end_time']
     return render(request, 'finish.html', {'title':'Test natijasi',
                                            'mark':mark,
+                                           'total_mark':total_mark,
+                                           'mark_percent':mark_percent,
                                            'question_set':question_set,
                                            'response':response,
                                            'test_day':test_day,

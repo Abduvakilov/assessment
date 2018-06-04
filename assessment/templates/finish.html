@@ -14,14 +14,16 @@
         <tr><td >Test tugallangan vaqt:</td><td >{{ end_time }}</td></tr>
         <tr><td >Sarflangan vaqt:</td><td >{{ time_spent }} (soat:daqiqa:soniya)</td></tr>
         <tr><td >Test mavzusi:</td><td >{% for category in user.testee.group.category.all %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</td></tr>
-        <tr><td >Test natijasi:</td><td >{{ mark }} ball</td></tr>
+        <tr><td >Savollar soni:</td><td >{{ question_set|length }}</td></tr>
+        <tr><td >Jami ball:</td><td >{{ total_mark }} ball</td></tr>
+        <tr><td >Test natijasi:</td><td >{{ mark }} ball ({{ mark_percent }})</td></tr>
     </table>
     <ol>
         {% for question in question_set %}
         <li><b>{{question.text}}</b></li><span>Javobingiz: </span>
         <ul>
             {% if question.choice %}{% for choice in question.choice %}
-            <li>{{choice.text}}<span></span> - {% if choice.mark > 0 %}<span class="glyphicon glyphicon-ok green"></span>{% endif %} {{choice.mark}} ball</li>
+            <li>{% if choice.mark > 0 %}<span class="glyphicon glyphicon-ok green"></span>{% endif %} {{choice.mark}} ball - {{choice.text}}</li>
             {% endfor %}{% else %}
             <span><span class="glyphicon glyphicon-unchecked"></span> Tanlanmagan - 0 ball</span>
             {% endif %}

@@ -2,19 +2,26 @@ from django.contrib import admin
 from django.apps import apps
 from .models import *
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
+from django.forms import TextInput, Textarea
 
 class ChoiceInline(admin.TabularInline):
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':100})},
+    }
     model = Choice
     extra = 4
 
 
 class QuestionAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows':4, 'cols':100})},
+    }
     fieldsets = [
         (None,               {'fields': ['text','category']}),
         ('Boshqa', {'fields': ['image', 'is_multiple_choice', 'is_active'], 'classes': ['collapse']}),
     ]
     inlines = [ChoiceInline]
-    list_display = ('text', 'category', 'pub_date', 'is_active', 'is_multiple_choice')
+    list_display = ('text', 'category', 'pub_date', 'max_mark', 'is_active', 'is_multiple_choice')
     list_filter = ['category', 'pub_date', 'is_active', 'is_multiple_choice']
     search_fields = ['text']
 
@@ -64,6 +71,7 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(TesteeGroup, TesteeGroupAdmin)
 # admin.site.register(Testee, TesteeAdmin)
+admin.site.register(Response)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

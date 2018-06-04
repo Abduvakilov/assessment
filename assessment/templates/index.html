@@ -10,10 +10,10 @@
             <tr>
                 <td><input id="exam{{forloop.counter}}" type="radio" name="examid" value="{{ exam.id }}"
                            {% if forloop.counter == 1 %} checked="checked" {% endif %}></td>
-                <td><label for="exam{{forloop.counter}}">{% for category in user.testee.group.category.all %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</label></td>
+                <td><label for="exam{{forloop.counter}}">{% for category in categories %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</label></td>
                 <td><label for="exam{{forloop.counter}}">{{ exam.deadline}}</label></td>
                 <td><label for="exam{{forloop.counter}}"><span id="time{{ forloop.counter }}"></span></label></td>
-                <td><label for="exam{{forloop.counter}}">{{ exam.description|default:"..." }}</label></td>
+                <td><label for="exam{{forloop.counter}}">{{ exam.description|linebreaksbr|default:"..." }}</label></td>
             </tr>
 
             {% endfor %}
@@ -28,7 +28,11 @@
         </div>
     </form>
     {% else %}
+    {% if error == 404 %}
+    Foydalanuvchi tiliga mos imtihonlar topilmadi
+    {% else %}
     <p>Hozirda Siz uchun imtihonlar belgilanmagan</p>
+    {% endif %}
     {% endif %}
 </div>
 {% endblock %}

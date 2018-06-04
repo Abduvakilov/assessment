@@ -2,7 +2,7 @@
 {% block content %}
 <div class="time"><span id="bar"></span><p id="time_left" class="text-right">...</p></div>
 <div class="card-in">
-    <h3>{{ question_no }}. {{ question.text }}</h3>
+    <h3>{{ question_no }}. {{ question.text|linebreaksbr }}</h3>
     {% if question.image %}<img class="img" src="{{ question.image.url }}">{% endif %}
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% else %}
 
@@ -13,7 +13,7 @@
                {% for c in choosen %}
                {% if choice.id == c %} checked="checked" {% endif %}
                {% endfor %} />
-        {{ choice.text }}</label><br></div>
+        {{ choice.text|linebreaksbr }}</label><br></div>
         {% endfor %}
         <p>{{error_message|default:""}}</p>
         <div class="text-center"><div class="red" id="valErr"></div><input type="submit" class="btn btn-success" value="Tanla" onclick="return check()"/></div>

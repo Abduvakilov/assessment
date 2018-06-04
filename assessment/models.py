@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.db.models import Max
 
 class Category(models.Model):
     name           = models.CharField(max_length=127)
@@ -20,9 +21,9 @@ class Category(models.Model):
 class TesteeGroup(models.Model):
     name = models.CharField(max_length=255)
     category = models.ManyToManyField(Category)
-    def random_questions(self):
+    def random_questions(self, lang):
         question_set = []
-        for cat in self.category.all():
+        for cat in self.category.filter(language=lang):
             question_set += cat.random_questions()
         return question_set
     def __str__(self):
@@ -34,7 +35,7 @@ class Exam(models.Model):
     deadline = models.DateTimeField('Tugash vaqti')
     test_time= models.DurationField('Test davomiyligi (soat:daqiqa:soniya)')
     one_time  = models.BooleanField('Faqat bir marotaba topshiriladi', default=True)
-    description=models.CharField("Test tarifi", max_length=512, null=True, blank=True)
+    description=models.TextField("Test tarifi", max_length=512, null=True, blank=True)
     def __str__(self):
         return self.start.strftime("%d %b %Y")
 
@@ -50,18 +51,21 @@ class Testee(models.Model):
         return self.user.username
 
 class Question(models.Model):
-    text     = models.CharField(max_length=255)
+    text     = models.TextField(max_length=500)
     image    = models.ImageField(upload_to="images", null=True, blank=True)
     pub_date = models.DateTimeField('Sana', auto_now=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     is_multiple_choice = models.BooleanField('Muliple choice',default=False)
     is_active= models.BooleanField('Faol', default=True)
+    def max_mark(self):
+        return self.choice_set.aggregate(Max('mark'))['mark__max']
+    max_mark.short_description = "Baho"
     def __str__(self):
         return self.text
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    text     = models.CharField(max_length=255)
+    text     = models.TextField(max_length=500)
     mark     = models.SmallIntegerField(default=0)
     def __str__(self):
         return self.text
@@ -83,4 +87,4 @@ class SelectedChoice(models.Model):
     choice   = models.ForeignKey(Choice, on_delete=models.CASCADE)
     response = models.ForeignKey(Response, on_delete=models.SET_NULL, null=True)
     def __str__(self):
-        return self.response.testee.user.username
+        return self.choice.text
