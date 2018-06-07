@@ -1,0 +1,20 @@
+{% extends 'Tbase.html' %}
+{% block content %}
+<div class="card-in">
+    {% if error == 403 %}
+    <p>Siz uchun ruhsat berilmagan</p>
+    {% else %}
+    <form action="{% url 'assessment:tester' %}" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+            {% if error == 404 %}
+            <tr class="red" id="error"><td></td><td>Berilgan so'rov bo'yicha xech nima topilmadi</td></tr>
+            {% endif %}
+            <tr><td></td><td><input type="submit" value="Ko'rish" onclick="document.getElementById('error').innerHTML ='';"/></td></tr>
+        </table>
+
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

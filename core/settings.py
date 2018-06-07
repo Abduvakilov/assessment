@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'assessment.apps.AssessmentConfig',
-    'tester.apps.TesterConfig',
-
+    # 'tester.apps.TesterConfig',
+    # 'report_builder',
+    # 'rest_framework',
     # 'autofixture', # Fills base with random content To be removed
 ]
 
@@ -68,7 +69,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.i18n',
-                'django.template.context_processors.media'
+                'django.template.context_processors.media',
+
+                # 'django.template.context_processors.static'
             ],
         },
     },

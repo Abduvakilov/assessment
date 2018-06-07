@@ -1,15 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.db.models import Max
+from django.db.models import Max, Sum
+
+class Branch(models.Model):
+    name = models.CharField('filial nomi', max_length=127)
+    code = models.PositiveSmallIntegerField("Filial kodi")
+    def __str__(self):
+        return self.name
 
 class Category(models.Model):
     name           = models.CharField(max_length=127)
     question_count = models.PositiveSmallIntegerField()
-    language = models.PositiveSmallIntegerField(choices=((0, 'uz'),
-                                                         (1, 'ru'),
-                                                         (2, 'en')),
-                                                default=0)
+    language       = models.PositiveSmallIntegerField(choices=((0, 'uz'),
+                                                               (1, 'ru'),
+                                                               (2, 'en')),
+                                                      default=0)
     def random_questions(self):
         import random
         ids        = [id for id in self.question_set.filter(is_active=True).values_list('pk', flat=True)]
@@ -37,12 +43,13 @@ class Exam(models.Model):
     one_time  = models.BooleanField('Faqat bir marotaba topshiriladi', default=True)
     description=models.TextField("Test tarifi", max_length=512, null=True, blank=True)
     def __str__(self):
-        return self.start.strftime("%d %b %Y")
+        return self.start.strftime("%d %b %Y")+" - "+", ".join(self.groups.values_list('name', flat=True)[:3])
 
 class Testee(models.Model):
     user     = models.OneToOneField(User, on_delete=models.CASCADE)
-    ask_name  = models.BooleanField("Har safar ism So'ralsin", default=False)
+    ask_name = models.BooleanField("Har safar ism So'ralsin", default=False)
     group    = models.ForeignKey(TesteeGroup, on_delete=models.SET_NULL, null=True)
+    branch   = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True)
     language = models.PositiveSmallIntegerField(choices=((0,'uz'),
                                                          (1,'ru'),
                                                          (2,'en')),
@@ -78,8 +85,21 @@ class Response(models.Model):
     exam        = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True)
     questions   = models.ManyToManyField(Question)
     choices     = models.ManyToManyField(Choice, through='SelectedChoice')
+    def get_mark(self):
+        return self.choices.aggregate(Sum('mark'))['mark__sum']
+    def max_mark(self):
+        return  self.questions.annotate(Max('choice__mark')).aggregate(Sum('choice__mark__max'))['choice__mark__max__sum']
+    def get_test_time(self):
+        if self.end_time is not None:
+            return (self.end_time - self.start_time).total_seconds() / 60
+        return self.exam.test_time.total_seconds() / 60
     def __str__(self):
         return self.testee.user.username+"'s response"
+
+    class Meta:
+        permissions = (
+            ("can_create_reports", "Can create reports"),
+        )
 
 class SelectedChoice(models.Model):
     time     = models.DateTimeField('Vaqt', default=timezone.now)

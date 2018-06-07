@@ -55,6 +55,7 @@ class TesteeGroupAdmin(admin.ModelAdmin):
 class TesteeInline(admin.StackedInline):
     model = Testee
     max_num = 1
+    min_num = 1
     can_delete = False
 
 class UserAdmin(AuthUserAdmin):
@@ -62,10 +63,14 @@ class UserAdmin(AuthUserAdmin):
     def get_testee_group(self, obj):
         return obj.testee.group
     get_testee_group.short_description =  "Guruh"
-    get_testee_group.admin_order_field = 'testee__group__name'
-    list_display = ('username', 'first_name', 'last_name',  'get_testee_group', 'is_staff')
-    AuthUserAdmin.list_filter += ('testee__group',)
-    AuthUserAdmin.search_fields += ('testee__group__name',)
+    get_testee_group.admin_order_field = 'testee__group'
+    def get_testee_branch(self, obj):
+        return obj.testee.branch
+    get_testee_branch.short_description =  "Filial"
+    get_testee_branch.admin_order_field = 'testee__branch'
+    list_display = ('username', 'first_name', 'last_name',  'get_testee_branch', 'get_testee_group', 'is_staff')
+    AuthUserAdmin.list_filter += ('testee__branch', 'testee__group',)
+    AuthUserAdmin.search_fields += ( 'testee__branch', 'testee__group__name',)
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Exam, ExamAdmin)
@@ -78,6 +83,7 @@ admin.site.register(User, UserAdmin)
 
 
 admin.site.register(Category)
+admin.site.register(Branch)
 
 
 # class TesteeAdmin(admin.ModelAdmin):
