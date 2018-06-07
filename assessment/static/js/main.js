@@ -2,7 +2,7 @@ var element  = document.getElementById("time_left")
 if (element) {
     var x = setInterval(function() {
       distance -= 10;
-      bar.style.width = (1-distance/testTime)*100 + "%";
+      bar.style.width = Math.min((1-distance/testTime)*100, 100) + "%";
       element.innerHTML = timeToString(distance) + " vaqtingiz qoldi";
       if (distance < 0) {
         clearInterval(x);

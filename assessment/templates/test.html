@@ -8,7 +8,7 @@
 
     <form action="{% url 'assessment:tanla' question_no %}" method="post">
         {% csrf_token %}
-        {% for choice in question.choice_set.all %}
+        {% for choice in choices %}
         <div class="{{type}}"><label><input type="{{type}}" name="choice" value="{{ choice.id }}"
                {% for c in choosen %}
                {% if choice.id == c %} checked="checked" {% endif %}
@@ -35,6 +35,5 @@ var testTime = {{test_time}};
 var bar = document.getElementById('bar');
 bar.setAttribute("style", "width:" + ((1-distance/testTime)*100) + "%");
 </script>
-<script src="/static/js/main.js"></script>
 {% endif %}
 {% endblock %}

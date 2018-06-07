@@ -58,6 +58,20 @@ class TesteeInline(admin.StackedInline):
     min_num = 1
     can_delete = False
 
+class QuestionInline(admin.StackedInline):
+    model = Response.questions.through
+    verbose_name = "Tushgan savol"
+    verbose_name_plural = "Tushgan savollar"
+
+class ResponseAdmin(admin.ModelAdmin):
+    inlines = [QuestionInline]
+    exclude = ('questions',)
+    list_display = ('testee', 'start_time', 'end_time', 'get_mark', 'max_mark', 'exam')
+    list_filter = ('testee__group', 'testee__branch', 'start_time',)
+    search_fields = ['testee__group__name', 'testee__branch__name', 'testee__user__first_name', 'testee__user__last_name']
+
+
+
 class UserAdmin(AuthUserAdmin):
     inlines = [TesteeInline]
     def get_testee_group(self, obj):
@@ -76,7 +90,7 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(TesteeGroup, TesteeGroupAdmin)
 # admin.site.register(Testee, TesteeAdmin)
-admin.site.register(Response)
+admin.site.register(Response, ResponseAdmin)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

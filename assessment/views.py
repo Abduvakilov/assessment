@@ -7,7 +7,7 @@ from django.utils import timezone
 from datetime import datetime
 import csv
 import xlwt
-
+import random
 
 from .forms import TesterForm
 
@@ -48,7 +48,10 @@ def start(request):
     response.questions.set(question_set)
     request.session['responseid'] = response.pk
     end_time = seconds(timezone.now() + exam.test_time)
-    request.session['end_time']   = end_time
+    request.session['end_time'] = end_time
+    nums = list(range(10))
+    random.shuffle(nums)
+    request.session['random'] = nums # 10 is taken as maximum number of choices to shuffle
     request.session.set_expiry(end_time+600)
     return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
 
@@ -76,10 +79,14 @@ def test(request, question_no):
     for c in sc:
         question_set[c.number-1] = True
     choosen = sc.filter(number=question_no).values_list('choice', flat=True)
+    choices = question.choice_set.all()
+    random = request.session['random'][:choices.count()]
+    choices = [x for _, x in sorted(zip(random, list(choices)))]
     return render(request, 'test.html', {'title':'{}-savol'.format(question_no),
                                          'time_left': seconds_left,
                                          'test_time': int(response.exam.test_time.total_seconds()),
                                          'question':question,
+                                         'choices': choices,
                                          'questions': question_set,
                                          'prev': question_no-1,
                                          'question_no': question_no,
@@ -115,6 +122,8 @@ def confirm(request):
     response_id   = request.session.get('responseid', None)
     response = get_object_or_404(Response, id=response_id)
     choices  = response.choices.all()
+    end_time     = request.session['end_time']
+    seconds_left = end_time - seconds(timezone.now())
     questions= response.questions.all()
     question_set = []
     for question in questions:
@@ -123,6 +132,8 @@ def confirm(request):
             'choice': choices.filter(question=question).values_list('text', flat=True)
         }]
     return render(request, 'confirm.html', {'title':'Testni tasdiqlash',
+                                            'time_left': seconds_left,
+                                            'test_time': int(response.exam.test_time.total_seconds()),
                                             'question_set':question_set,})
 
 

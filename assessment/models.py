@@ -8,6 +8,9 @@ class Branch(models.Model):
     code = models.PositiveSmallIntegerField("Filial kodi")
     def __str__(self):
         return self.name
+    class Meta:
+         verbose_name = "Filial"
+         verbose_name_plural = "Filiallar"
 
 class Category(models.Model):
     name           = models.CharField(max_length=127)
@@ -23,6 +26,9 @@ class Category(models.Model):
         return Question.objects.filter(id__in=random_ids)
     def __str__(self):
         return self.name
+    class Meta:
+         verbose_name = "Savol Toifasi"
+         verbose_name_plural = "Savol Toifalari"
 
 class TesteeGroup(models.Model):
     name = models.CharField(max_length=255)
@@ -34,6 +40,9 @@ class TesteeGroup(models.Model):
         return question_set
     def __str__(self):
         return self.name
+    class Meta:
+         verbose_name = "Test topshiruvchilar guruhi"
+         verbose_name_plural = "Test topshiruvchilar guruhlari"
 
 class Exam(models.Model):
     groups   = models.ManyToManyField(TesteeGroup)
@@ -44,6 +53,9 @@ class Exam(models.Model):
     description=models.TextField("Test tarifi", max_length=512, null=True, blank=True)
     def __str__(self):
         return self.start.strftime("%d %b %Y")+" - "+", ".join(self.groups.values_list('name', flat=True)[:3])
+    class Meta:
+         verbose_name = "Imtihon"
+         verbose_name_plural = "Imtihonlar"
 
 class Testee(models.Model):
     user     = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -55,7 +67,10 @@ class Testee(models.Model):
                                                          (2,'en')),
                                                 default=0)
     def __str__(self):
-        return self.user.username
+        return self.user.get_full_name()
+    class Meta:
+         verbose_name = "Test topshiruvchi"
+         verbose_name_plural = "Test topshiruvchilar"
 
 class Question(models.Model):
     text     = models.TextField(max_length=500)
@@ -69,6 +84,9 @@ class Question(models.Model):
     max_mark.short_description = "Baho"
     def __str__(self):
         return self.text
+    class Meta:
+         verbose_name = "Test Savoli"
+         verbose_name_plural = "Test savollari"
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -76,27 +94,35 @@ class Choice(models.Model):
     mark     = models.SmallIntegerField(default=0)
     def __str__(self):
         return self.text
+    class Meta:
+         verbose_name = "Variant"
+         verbose_name_plural = "Variantlar"
 
 class Response(models.Model):
+    testee      = models.ForeignKey(Testee, on_delete=models.CASCADE)
     start_time  = models.DateTimeField("Test Boshlangan Vaqt", default=timezone.now)
     end_time    = models.DateTimeField('Tugallangan vaqt', null=True)
     is_finished = models.BooleanField(default=False)
-    testee      = models.ForeignKey(Testee, on_delete=models.CASCADE)
     exam        = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True)
     questions   = models.ManyToManyField(Question)
     choices     = models.ManyToManyField(Choice, through='SelectedChoice')
     def get_mark(self):
         return self.choices.aggregate(Sum('mark'))['mark__sum']
+    get_mark.short_description = "Baho"
     def max_mark(self):
         return  self.questions.annotate(Max('choice__mark')).aggregate(Sum('choice__mark__max'))['choice__mark__max__sum']
+    max_mark.short_description = "To'liq baho"
     def get_test_time(self):
         if self.end_time is not None:
-            return (self.end_time - self.start_time).total_seconds() / 60
-        return self.exam.test_time.total_seconds() / 60
+            return round((self.end_time - self.start_time).total_seconds() / 60, 2)
+        return round(self.exam.test_time.total_seconds() / 60, 2)
+    get_test_time.short_description = 'Sarflangan Vaqt (daqiqa)'
     def __str__(self):
-        return self.testee.user.username+"'s response"
+        return self.testee.user.get_full_name() +"ning javobi"
 
     class Meta:
+        verbose_name = "Topshirilgan javob"
+        verbose_name_plural = "Topshirilgan javoblar"
         permissions = (
             ("can_create_reports", "Can create reports"),
         )
@@ -108,3 +134,6 @@ class SelectedChoice(models.Model):
     response = models.ForeignKey(Response, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return self.choice.text
+    class Meta:
+        verbose_name = "Tanlangan javob"
+        verbose_name_plural = "Tanlangan javoblar"
