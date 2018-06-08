@@ -25,7 +25,7 @@ SECRET_KEY = 'lc(wtw*1!*_g_ewm4y_n%0)l7@+(qx#f&i%y#0xc6jh9k3js=v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -131,8 +131,6 @@ LOCALE_PATHS = (
     '/assessment/locale/',
 )
 
-USE_I18N = True
-
 ugettext = lambda s: s
 LANGUAGES = (
     ('uz', ugettext('Uzbek')),
@@ -154,4 +152,3 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 LOGOUT_REDIRECT_URL = '/'
 
-ALLOWED_HOSTS = ['*']

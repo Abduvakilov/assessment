@@ -67,7 +67,7 @@ class ResponseAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
     exclude = ('questions',)
     list_display = ('testee', 'start_time', 'end_time', 'get_mark', 'max_mark', 'exam')
-    list_filter = ('testee__group', 'testee__branch', 'start_time',)
+    list_filter = ('testee__group', 'testee__branch', 'start_time', 'exam')
     search_fields = ['testee__group__name', 'testee__branch__name', 'testee__user__first_name', 'testee__user__last_name']
 
 

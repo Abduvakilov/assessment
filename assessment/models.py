@@ -107,7 +107,7 @@ class Response(models.Model):
     questions   = models.ManyToManyField(Question)
     choices     = models.ManyToManyField(Choice, through='SelectedChoice')
     def get_mark(self):
-        return self.choices.aggregate(Sum('mark'))['mark__sum']
+        return self.choices.aggregate(Sum('mark'))['mark__sum'] or 0
     get_mark.short_description = "Baho"
     def max_mark(self):
         return  self.questions.annotate(Max('choice__mark')).aggregate(Sum('choice__mark__max'))['choice__mark__max__sum']
