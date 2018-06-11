@@ -1,9 +1,9 @@
 var element  = document.getElementById("time_left")
+var bar = document.getElementById('bar');
 if (element) {
+    setTimeLeft()
     var x = setInterval(function() {
       distance -= 10;
-      bar.style.width = Math.min((1-distance/testTime)*100, 100) + "%";
-      element.innerHTML = timeToString(distance) + " vaqtingiz qoldi";
       if (distance < 0) {
         clearInterval(x);
         element.innerHTML = "Vaqt Tugadi";
@@ -11,9 +11,13 @@ if (element) {
     }, 10000);
 }
 function timeToString(time) {
-  var hours = Math.floor(time / 3600);
-  var minutes = Math.floor(time / 60) % 60;
-  return (hours ? hours + " soat ":"") + minutes + " daqiqa";
+    if (time>0){
+        var hours = Math.floor(time / 3600);
+        var minutes = Math.floor(time / 60) % 60;
+        return (hours ? hours + " soat ":"") + minutes + " daqiqa";
+    } else {
+        return;
+    }
 }
 function check() {
     var checkboxes = document.querySelectorAll('input[type="checkbox"], input[type="radio"');
@@ -24,3 +28,11 @@ function check() {
     }
     return true;
 }
+
+function setTimeLeft(){
+
+    bar.style.width = Math.min(1-distance/testTime, 1) * 100 + "%";
+    element.innerHTML = timeToString(distance) ? timeToString(distance) + " vaqtingiz qoldi" : "Vaqt Tugadi";
+}
+
+setTimeLeft()

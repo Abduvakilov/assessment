@@ -106,6 +106,11 @@ class Response(models.Model):
     exam        = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True)
     questions   = models.ManyToManyField(Question)
     choices     = models.ManyToManyField(Choice, through='SelectedChoice')
+    language    = models.PositiveSmallIntegerField(choices=((0,'uz'),
+                                                         (1,'ru'),
+                                                         (2,'en')),
+                                                default=0)
+
     def get_mark(self):
         return self.choices.aggregate(Sum('mark'))['mark__sum'] or 0
     get_mark.short_description = "Baho"
@@ -114,11 +119,13 @@ class Response(models.Model):
     max_mark.short_description = "To'liq baho"
     def get_test_time(self):
         if self.end_time is not None:
-            return round((self.end_time - self.start_time).total_seconds() / 60, 2)
+            return int((self.end_time - self.start_time).total_seconds() / 60)
         return round(self.exam.test_time.total_seconds() / 60, 2)
     get_test_time.short_description = 'Sarflangan Vaqt (daqiqa)'
     def __str__(self):
         return self.testee.user.get_full_name() +"ning javobi"
+
+
 
     class Meta:
         verbose_name = "Topshirilgan javob"

@@ -26,14 +26,14 @@
             {{ forloop.counter }}
         </a>
         {% endfor %}
-        {% if next %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' next %}">Keyingisi <span class="glyphicon glyphicon-chevron-right"></span></a>{% endif %}
+        {% if next %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' next %}">Keyingisi <span class="glyphicon glyphicon-chevron-right"></span></a>
+        {% else %}<a class="btn btn-xs btn-default" href="{% url 'assessment:confirm' %}">Tamomlash</a>
+        {% endif %}
     </div>
 </div>
 <script>
-var distance={{ time_left }};
+var distance = {{ time_left }};
 var testTime = {{test_time}};
-var bar = document.getElementById('bar');
-bar.setAttribute("style", "width:" + ((1-distance/testTime)*100) + "%");
 </script>
 {% endif %}
 {% endblock %}

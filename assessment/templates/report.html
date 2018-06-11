@@ -1,0 +1,14 @@
+{% extends 'Tbase.html' %}
+{% block content %}
+<form action="{% url 'assessment:report' %}" method="post">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        {% if error == 404 %}
+        <tr class="red" id="error"><td></td><td>Berilgan so'rov bo'yicha xech nima topilmadi</td></tr>
+        {% endif %}
+        <tr><td></td><td><input type="submit" value="Ko'rish" onclick="document.getElementById('error').innerHTML ='';"/></td></tr>
+    </table>
+
+</form>
+{% endblock %}

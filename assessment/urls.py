@@ -10,5 +10,9 @@ urlpatterns = [
     path('tanla/<int:question_no>/', views.choose, name='tanla'),
     path('finish/', views.finish, name='finish'),
     path('confirm/', views.confirm, name='confirm'),
+
+    # Tester Zone
     path('tester/', views.tester, name='tester'),
+    path('tester/result/<int:response_id>/', views.result, name='result'),
+    path('tester/report/', views.report, name='report'),
 ]

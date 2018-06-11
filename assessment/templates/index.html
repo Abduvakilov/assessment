@@ -4,7 +4,7 @@
     {% if exams %}
     <p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:</p>
     <form action="{% url 'assessment:start' %}" method="POST">
-        <table class="table"><tr><th>Tanlash uchun</th><th>Mavzular</th><th>Oxirgi muhlat</th><th>Davomiyligi</th><th>Tasnifi</th></tr>
+        <table class="table"><tr><th></th><th>Mavzular</th><th>Oxirgi muhlat</th><th>Davomiyligi</th><th></th></tr>
 
             {% for exam in exams %}
             <tr>
@@ -13,11 +13,9 @@
                 <td><label for="exam{{forloop.counter}}">{% for category in categories %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</label></td>
                 <td><label for="exam{{forloop.counter}}">{{ exam.deadline}}</label></td>
                 <td><label for="exam{{forloop.counter}}"><span id="time{{ forloop.counter }}"></span></label></td>
-                <td><label for="exam{{forloop.counter}}">{{ exam.description|linebreaksbr|default:"..." }}</label></td>
+                <td><label for="exam{{forloop.counter}}">{{ exam.description|default_if_none:"..."|linebreaksbr }}</label></td>
             </tr>
-
             {% endfor %}
-
 
         </table>
         <p>Agar tayyot bo'lsangiz Boshlash tugmasini bosing.</p>

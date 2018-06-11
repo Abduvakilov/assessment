@@ -1,15 +1,15 @@
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect, StreamingHttpResponse, HttpResponse
+from django.http import HttpResponseRedirect, StreamingHttpResponse, HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from .models import *
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime
 import csv
 import xlwt
 import random
 
-from .forms import TesterForm
+from .forms import ReportForm
 
 def seconds(time):
     return int((time - timezone.make_aware(datetime(2018, 1, 1))).total_seconds())
@@ -125,25 +125,26 @@ def confirm(request):
     end_time     = request.session['end_time']
     seconds_left = end_time - seconds(timezone.now())
     questions= response.questions.all()
-    question_set = []
-    for question in questions:
-        question_set += [{
-            'text': question.text,
-            'choice': choices.filter(question=question).values_list('text', flat=True)
-        }]
-    return render(request, 'confirm.html', {'title':'Testni tasdiqlash',
+    questions_missed = []
+    for number, question in enumerate(questions):
+        choice = choices.filter(question=question)
+        if not choice.exists():
+            questions_missed += [{
+                'number' : number,
+                'text' : question.text,
+                'choice' : choice.values_list('text', flat=True)
+            }]
+    return render(request, 'confirm.html', {'title':'Testni yakunlash',
                                             'time_left': seconds_left,
                                             'test_time': int(response.exam.test_time.total_seconds()),
-                                            'question_set':question_set,})
+                                            'questions_missed':questions_missed,})
 
 
 @login_required
 def finish(request):
     response_id   = request.session.get('responseid', None)
     response = get_object_or_404(Response, id=response_id)
-    mark     = response.get_mark()
-    total_mark = response.max_mark()
-    mark_percent = '{}%'.format(mark*100//total_mark)
+    mark_percent = '{}%'.format(response.get_mark()*100//response.max_mark())
     if response.is_finished == False:
         response.is_finished = True
         response.end_time = timezone.now()
@@ -153,37 +154,63 @@ def finish(request):
     test_day   = start.strftime('%d-%B, %Y-yil')
     start_time = start.strftime('%-H:%M:%S')
     end_time   = timezone.make_naive(response.end_time).strftime('%-H:%M:%S')
-    choices  = response.choices.all()
-    questions= response.questions.all()
-    # max_marks = [question.choice_set.aggregate(Max('mark')) for question in questions]
-    # total_mark= sum(max_marks)
-    question_set = []
-    for question in questions:
-        question_set += [{
-            'text': question.text,
-            'choice': choices.filter(question=question)
-        }]
-    # del request.session['responseid']
-    # del request.session['end_time']
+
     return render(request, 'finish.html', {'title':'Test natijasi',
-                                           'mark':mark,
-                                           'total_mark':total_mark,
                                            'mark_percent':mark_percent,
-                                           'question_set':question_set,
                                            'response':response,
+                                           'categories': response.testee.group.category.filter(language=response.language),
                                            'test_day':test_day,
                                            'start_time':start_time,
                                            'end_time':end_time,
                                            'time_spent':time_spent})
 
 
+
 ########################## Tester Zone ###############################
 @login_required
 def tester(request):
-    if not request.user.has_perm('assessment.can_create_reports'):
-        return render(request, 'tester.html', {'error': 403})  # No Permission Forbidden
+    if not request.user.is_staff:
+        return render(request, 'tester.html', {'title' : 'Tester Zone','error': 403})  # No Permission Forbidden
+    return render(request, 'tester.html', {'title' : 'Tester Zone'})
+
+
+@login_required
+def result(request, response_id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Ruhsat yo'q")  # No Permission Forbidden
+
+    response = get_object_or_404(Response, id=response_id)
+    mark_percent = '{}%'.format(response.get_mark()*100//response.max_mark())
+    start      = timezone.make_naive(response.start_time)
+    test_day   = start.strftime('%d-%B, %Y-yil')
+    start_time = start.strftime('%-H:%M:%S')
+    if response.end_time:
+        end_time   = timezone.make_naive(response.end_time).strftime('%-H:%M:%S')
+    else:
+        end_time = start + response.exam.test_time
+    question_set = []
+    for question in response.questions.all():
+        question_set += [{
+            'text': question.text,
+            'choice': response.choices.filter(question=question)
+        }]
+
+    return render(request, 'result.html', {'title' : 'Imtihon Natijalari',
+                                           'mark_percent' : mark_percent,
+                                           'question_set' : question_set,
+                                           'response' : response,
+                                           'categories' : response.testee.group.category.filter(language=response.language),
+                                           'test_day':test_day,
+                                           'start_time':start_time,
+                                           'end_time':end_time,})
+
+
+@login_required
+def report(request):
+    if  not request.user.is_staff:
+        return render(request, 'report.html', {'error': 403})  # No Permission Forbidden
     if request.method == 'POST':
-        form = TesterForm(request.POST)
+        form = ReportForm(request.POST)
         if form.is_valid():
             responses = Response.objects
             if request.POST['exam']:
@@ -196,7 +223,7 @@ def tester(request):
             if type(responses).__name__ == "Manager":
                 responses = responses.all()
             if not responses.exists():
-                return render(request, 'tester.html', {'form': form, 'error': 404})  # Hech nima topilmadi
+                return render(request, 'report.html', {'form': form, 'error': 404})  # Hech nima topilmadi
 
             if request.POST['summarize'] == '1':   # Filial bo'yicha
                 rows = summarize(Branch, responses)
@@ -214,9 +241,9 @@ def tester(request):
             else:
                 return export_csv(rows, filename)
     else:
-        form = TesterForm()
+        form = ReportForm()
 
-    return render(request, 'tester.html', {'form': form})
+    return render(request, 'report.html', {'form': form})
 
 def summarize(Class, responses):
     if Class == Branch:

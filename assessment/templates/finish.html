@@ -7,29 +7,18 @@
     <h3 class="text-center">Test qabul qilindi</h3>
     {% endif %}
     <table class="margin-auto">
-        <tr><td >Ism:</td><td >{{user.first_name}} {{ user.last_name}}</td></tr>
+        <tr><td >Ism:</td><td >{{user.get_full_name}}</td></tr>
+        <tr><td >Filial:</td><td>{{ user.testee.branch }}</td></tr>
         <tr><td>Testga berilgan vaqt:</td><td >{{ response.exam.test_time }} (soat:daqiqa:soniya)</td></tr>
-        <tr><td >Test kuni:</td><td >{{ test_day }}</td></tr>
+        <tr><td >Test kuni:</td><td>{{ test_day }}</td></tr>
         <tr><td >Test boshlangan vaqt:</td><td >{{ start_time }}</td></tr>
         <tr><td >Test tugallangan vaqt:</td><td >{{ end_time }}</td></tr>
         <tr><td >Sarflangan vaqt:</td><td >{{ time_spent }} (soat:daqiqa:soniya)</td></tr>
-        <tr><td >Test mavzusi:</td><td >{% for category in user.testee.group.category.all %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</td></tr>
+        <tr><td >Test mavzusi:</td><td >{% for category in categories %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</td></tr>
         <tr><td >Savollar soni:</td><td >{{ question_set|length }}</td></tr>
-        <tr><td >Jami ball:</td><td >{{ total_mark }} ball</td></tr>
-        <tr><td >Test natijasi:</td><td >{{ mark }} ball ({{ mark_percent }})</td></tr>
+        <tr><td >Jami ball:</td><td >{{ response.max_mark }} ball</td></tr>
+        <tr><td >Test natijasi:</td><td >{{ response.get_mark }} ball ({{ mark_percent }})</td></tr>
     </table>
-    <ol>
-        {% for question in question_set %}
-        <li><b>{{question.text}}</b></li><span>Javobingiz: </span>
-        <ul>
-            {% if question.choice %}{% for choice in question.choice %}
-            <li>{% if choice.mark > 0 %}<span class="glyphicon glyphicon-ok green"></span>{% endif %} {{choice.mark}} ball - {{choice.text}}</li>
-            {% endfor %}{% else %}
-            <span><span class="glyphicon glyphicon-unchecked"></span> Tanlanmagan - 0 ball</span>
-            {% endif %}
-        </ul><br>
-        {% endfor %}
-    </ol>
     <div class="text-center"><a class="btn btn-default" href="{% url 'assessment:index' %}">Bosh sahifaga o'tish</a></div>
 </div>
 {% endblock %}

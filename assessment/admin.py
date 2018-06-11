@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.apps import apps
 from .models import *
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
-from django.forms import TextInput, Textarea
+from django.forms import Textarea
+from django.utils.html import format_html
 
 class ChoiceInline(admin.TabularInline):
     formfield_overrides = {
@@ -66,7 +66,12 @@ class QuestionInline(admin.StackedInline):
 class ResponseAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
     exclude = ('questions',)
-    list_display = ('testee', 'start_time', 'end_time', 'get_mark', 'max_mark', 'exam')
+    def result(self, obj):
+        return format_html("<a href='/tester/result/{}'>Ko'rish</a>", obj.pk)
+    result.allow_tags = True
+    result.short_description = 'Natija'
+
+    list_display = ('testee', 'start_time', 'end_time', 'get_mark', 'max_mark', 'result', 'exam')
     list_filter = ('testee__group', 'testee__branch', 'start_time', 'exam')
     search_fields = ['testee__group__name', 'testee__branch__name', 'testee__user__first_name', 'testee__user__last_name']
 

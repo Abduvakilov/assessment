@@ -15,7 +15,7 @@
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" >Tester Zone</a>
+                <a href="{% url 'assessment:tester' %}" class="navbar-brand" >Tester Zone</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">{{ user.first_name }} {{ user.last_name }}</a></li>
@@ -25,8 +25,14 @@
         </div>
     </nav>
     <div class="card">
-        {% block content %}
-        {% endblock %}
+        <div class="card-in">
+            {% if error == 403 %}
+            <p>Siz uchun ruhsat berilmagan</p>
+            {% else %}
+            {% block content %}
+            {% endblock %}
+            {% endif %}
+        </div>
     </div>
 </div>
 <footer class="footer-copyright text-center">© 2018 Dilshodjon Abduvakilov</footer>

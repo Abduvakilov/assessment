@@ -2,25 +2,28 @@
 {% block content %}
 <div class="time"><span id="bar"></span><p id="time_left" class="text-right">...</p></div>
 <div class="card-in">
-    <h3>Iltimos Javoblaringizni ko'rib chiqing va tasdiqlang</h3>
-    <ol>
-        {% for question in question_set %}
-        <li><b>{{question.text}}</b></li><span>Javobingiz: <a class="pull-right" href="{% url 'assessment:test' forloop.counter %}"><span class="glyphicon glyphicon-edit"></span> Tahrirlash</a></span>
-        <ul>
-            {% if question.choice %}{% for choice in question.choice %}
-            <li>{{choice}}</li>
-            {% endfor %}{% else %}
-            <span class="red"><span class="glyphicon glyphicon-unchecked"></span> Tanlanmagan</span>
-            {% endif %}
-        </ul><br>
+    {% if questions_missed %}
+    <h3>Quyidagi savollar javobsiz qolgan</h3>
+    <ol>{% for question in questions_missed %}
+        <li value="{{ question.number }}"><b>{{question.text}}</b></li>
+        <span>
+            <a class="pull-right" href="{% url 'assessment:test' forloop.counter %}">
+                <span class="glyphicon glyphicon-edit"></span> Tahrirlash
+            </a>
+        </span>
+        <span class="red"><span class="glyphicon glyphicon-unchecked"></span> Javob tanlanmagan</span>
+        <br>
         {% endfor %}
     </ol>
-    <div class="text-center"><a class="btn btn-primary" href="{% url 'assessment:finish' %}">Tasdiqlash !</a></div>
+    {% endif %}
+    <p>Agar javoblaringiz qat'iy bo'lsa "Testni yakunlash" tugmasini bosing</p>
+    <div class="text-center">
+        <a class="btn btn-primary" href="{% url 'assessment:finish' %}">Testni yakunlash</a>
+        <a class="btn" href="{% url 'assessment:test' 1 %}">Ortga qaytish</a>
+    </div>
 </div>
 <script>
-var distance={{ time_left }};
+var distance = {{ time_left }};
 var testTime = {{test_time}};
-var bar = document.getElementById('bar');
-bar.setAttribute("style", "width:" + (Math.min((1-distance/testTime)*100),100) + "%");
 </script>
 {% endblock %}
