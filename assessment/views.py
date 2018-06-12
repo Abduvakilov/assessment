@@ -8,28 +8,43 @@ from datetime import datetime
 import csv
 import xlwt
 import random
-
+from django.utils import translation
+from django.utils.translation import gettext as _
 from .forms import ReportForm
 
 def seconds(time):
     return int((time - timezone.make_aware(datetime(2018, 1, 1))).total_seconds())
 
 @login_required
+def lang(request, language_id=None):
+    if language_id is None:
+        return render(request, 'lang.html', {'title' : _('Tilni Tanlang'),
+                                             'languages' : languages})
+    language = languages[language_id]
+    translation.activate(language[1])
+    request.session[translation.LANGUAGE_SESSION_KEY] = language[1]
+    request.session['lang_code'] = language[0]
+    return HttpResponseRedirect(reverse('assessment:index'))
+
+
+@login_required
 def index(request):
+    if 'lang_code' not in request.session:
+        return HttpResponseRedirect(reverse('assessment:lang'))
     if 'responseid' in request.session:
         response = Response.objects.get(pk=request.session['responseid'])
         if response.is_finished is False:
             return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
-    exams = None
-    if hasattr(request.user.testee, 'group'):
-        testee = request.user.testee
-        exams = Exam.objects.filter(groups=testee.group,
-                                    start__lt=timezone.now(),
-                                    deadline__gt=timezone.now()).order_by('start')
-        exams_with_no_response = exams.exclude(response__in=Response.objects.filter(testee=testee))
-        categories = testee.group.category.filter(language=testee.language)
-        if len(categories) == 0:
-            return render(request, 'index.html', {'error': 404}) #"Foydalanuvchi tiliga mos imtihonlar topilmadi"
+
+    lang_code = request.session['lang_code']
+    testee = request.user.testee
+    exams = Exam.objects.filter(groups=testee.group,
+                                start__lt=timezone.now(),
+                                deadline__gt=timezone.now()).order_by('start')
+    exams_with_no_response = exams.exclude(response__in=Response.objects.filter(testee=testee))
+    categories = testee.group.category.filter(language=lang_code)
+    if len(categories) == 0:
+        return render(request, 'index.html', {'error': 404}) #"Foydalanuvchi tiliga mos imtihonlar topilmadi"
     return render(request, 'index.html', {'exams':exams_with_no_response,
                                           'categories':categories,})
 
@@ -41,7 +56,8 @@ def start(request):
         if response.is_finished is False:
             return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
     testee = request.user.testee
-    question_set = testee.group.random_questions(testee.language)
+    lang_code = request.session['lang_code']
+    question_set = testee.group.random_questions(lang_code)
     exam   = Exam.objects.get(pk=request.POST.get("examid"))
     response = Response.objects.create(start_time=timezone.now(), testee=testee,
                                        exam=exam)
@@ -82,17 +98,17 @@ def test(request, question_no):
     choices = question.choice_set.all()
     random = request.session['random'][:choices.count()]
     choices = [x for _, x in sorted(zip(random, list(choices)))]
-    return render(request, 'test.html', {'title':'{}-savol'.format(question_no),
-                                         'time_left': seconds_left,
-                                         'test_time': int(response.exam.test_time.total_seconds()),
-                                         'question':question,
-                                         'choices': choices,
-                                         'questions': question_set,
-                                         'prev': question_no-1,
-                                         'question_no': question_no,
-                                         'next':question_no+1 if question_no != question_count else None,
-                                         'choosen': choosen,
-                                         'type':type,})
+    return render(request, 'test.html', {'title' : _('{}-savol').format(question_no),
+                                         'time_left' : seconds_left,
+                                         'test_time' : int(response.exam.test_time.total_seconds()),
+                                         'question' :question,
+                                         'choices' : choices,
+                                         'questions' : question_set,
+                                         'prev' : question_no-1,
+                                         'question_no' : question_no,
+                                         'next' : question_no+1 if question_no != question_count else None,
+                                         'choosen' : choosen,
+                                         'type' : type,})
 
 
 @login_required
@@ -102,7 +118,7 @@ def choose(request, question_no):
     choices = request.POST.getlist('choice')
     if len(choices) == 0:
         return render(request, 'test.html', {
-            'error_message': 'Javob tanlanmadi',
+            'error_message': _('Javob tanlanmadi'),
         })
     else:
         SelectedChoice.objects.filter(response=response, number=question_no).delete()
@@ -134,10 +150,10 @@ def confirm(request):
                 'text' : question.text,
                 'choice' : choice.values_list('text', flat=True)
             }]
-    return render(request, 'confirm.html', {'title':'Testni yakunlash',
-                                            'time_left': seconds_left,
-                                            'test_time': int(response.exam.test_time.total_seconds()),
-                                            'questions_missed':questions_missed,})
+    return render(request, 'confirm.html', {'title': _('Testni yakunlash'),
+                                            'time_left' : seconds_left,
+                                            'test_time' : int(response.exam.test_time.total_seconds()),
+                                            'questions_missed' : questions_missed,})
 
 
 @login_required
@@ -151,38 +167,39 @@ def finish(request):
         response.save()
     time_spent = "{}:{}:{}".format(int((response.end_time-response.start_time).total_seconds()//3600), int((response.end_time-response.start_time).total_seconds()//60%60), int((response.end_time-response.start_time).total_seconds()%60))
     start      = timezone.make_naive(response.start_time)
-    test_day   = start.strftime('%d-%B, %Y-yil')
+    test_day   = start.strftime(_('%d-%B, %Y-yil'))
     start_time = start.strftime('%-H:%M:%S')
     end_time   = timezone.make_naive(response.end_time).strftime('%-H:%M:%S')
 
-    return render(request, 'finish.html', {'title':'Test natijasi',
-                                           'mark_percent':mark_percent,
-                                           'response':response,
-                                           'categories': response.testee.group.category.filter(language=response.language),
-                                           'test_day':test_day,
-                                           'start_time':start_time,
-                                           'end_time':end_time,
-                                           'time_spent':time_spent})
+    return render(request, 'finish.html', {'title': _('Test natijasi'),
+                                           'mark_percent' : mark_percent,
+                                           'response' : response,
+                                           'categories' : response.testee.group.category.filter(language=response.language),
+                                           'test_day' : test_day,
+                                           'start_time' : start_time,
+                                           'end_time': end_time,
+                                           'time_spent' : time_spent})
 
 
 
 ########################## Tester Zone ###############################
 @login_required
 def tester(request):
+    error = None
     if not request.user.is_staff:
-        return render(request, 'tester.html', {'title' : 'Tester Zone','error': 403})  # No Permission Forbidden
-    return render(request, 'tester.html', {'title' : 'Tester Zone'})
+        error = 403
+    return render(request, 'tester.html', {'title' : _('Tester Zone'),'error': error})  # No Permission Forbidden
 
 
 @login_required
 def result(request, response_id):
     if not request.user.is_staff:
-        return HttpResponseForbidden("Ruhsat yo'q")  # No Permission Forbidden
+        return HttpResponseForbidden(_("Ruhsat yo'q"))  # No Permission Forbidden
 
     response = get_object_or_404(Response, id=response_id)
     mark_percent = '{}%'.format(response.get_mark()*100//response.max_mark())
     start      = timezone.make_naive(response.start_time)
-    test_day   = start.strftime('%d-%B, %Y-yil')
+    test_day   = start.strftime(_('%d-%B, %Y-yil'))
     start_time = start.strftime('%-H:%M:%S')
     if response.end_time:
         end_time   = timezone.make_naive(response.end_time).strftime('%-H:%M:%S')
@@ -195,7 +212,7 @@ def result(request, response_id):
             'choice': response.choices.filter(question=question)
         }]
 
-    return render(request, 'result.html', {'title' : 'Imtihon Natijalari',
+    return render(request, 'result.html', {'title' : _('Imtihon Natijalari'),
                                            'mark_percent' : mark_percent,
                                            'question_set' : question_set,
                                            'response' : response,

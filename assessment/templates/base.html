@@ -1,5 +1,6 @@
+{% load i18n %}
 <!doctype html>
-<html lang="uz">
+<html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,13 +14,15 @@
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" >Xodimlar baholash testi</a>
+                <a class="navbar-brand" >{% trans "Xodimlar baholash testi" %}</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
+                {% trans "Xodim filialga kiritilmagan" as branch %}
+                {% trans "Xodim guruhga kiritilmagan" as group %}
                 <li><a href="#">{{ user.get_full_name }}</a></li>
-                <li><a href="#">{{ user.testee.branch|default_if_none:"Xodim filialga kiritilmagan" }}</a></li>
-                <li><a href="#">{{ user.testee.group|default_if_none:"Xodim guruhga kiritilmagan" }}</a></li>
-                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Chiqish</a></li>
+                <li><a href="#">{{ user.testee.branch|default_if_none:branch }}</a></li>
+                <li><a href="#">{{ user.testee.group|default_if_none:group }}</a></li>
+                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> {%trans "Chiqish" %}</a></li>
             </ul>
         </div>
     </nav>

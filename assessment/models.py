@@ -2,22 +2,26 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import Max, Sum
+from django.utils.translation import gettext_lazy as _
+
+languages = [(0, 'uz', "O'zbek"),
+             (1, 'ru', "Русский"),
+             (2, 'en', "English")]
+language_coice = [(x, z) for x, y, z in languages]
 
 class Branch(models.Model):
-    name = models.CharField('filial nomi', max_length=127)
-    code = models.PositiveSmallIntegerField("Filial kodi")
+    name = models.CharField(_('Filial nomi'), max_length=127)
+    code = models.PositiveSmallIntegerField(_("Filial kodi"))
     def __str__(self):
         return self.name
     class Meta:
-         verbose_name = "Filial"
-         verbose_name_plural = "Filiallar"
+        verbose_name = _("Filial")
+        verbose_name_plural = _("Filiallar")
 
 class Category(models.Model):
-    name           = models.CharField(max_length=127)
-    question_count = models.PositiveSmallIntegerField()
-    language       = models.PositiveSmallIntegerField(choices=((0, 'uz'),
-                                                               (1, 'ru'),
-                                                               (2, 'en')),
+    name           = models.CharField(_("Guruh Nomi"),max_length=127)
+    question_count = models.PositiveSmallIntegerField(_("Savollar soni"))
+    language       = models.PositiveSmallIntegerField(_("Savollar tili"), choices=language_coice,
                                                       default=0)
     def random_questions(self):
         import random
@@ -27,8 +31,8 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-         verbose_name = "Savol Toifasi"
-         verbose_name_plural = "Savol Toifalari"
+        verbose_name = _("Savol Toifasi")
+        verbose_name_plural = _("Savol Toifalari")
 
 class TesteeGroup(models.Model):
     name = models.CharField(max_length=255)
@@ -41,8 +45,8 @@ class TesteeGroup(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-         verbose_name = "Test topshiruvchilar guruhi"
-         verbose_name_plural = "Test topshiruvchilar guruhlari"
+        verbose_name = "Test topshiruvchilar guruhi"
+        verbose_name_plural = "Test topshiruvchilar guruhlari"
 
 class Exam(models.Model):
     groups   = models.ManyToManyField(TesteeGroup)
@@ -54,23 +58,19 @@ class Exam(models.Model):
     def __str__(self):
         return self.start.strftime("%d %b %Y")+" - "+", ".join(self.groups.values_list('name', flat=True)[:3])
     class Meta:
-         verbose_name = "Imtihon"
-         verbose_name_plural = "Imtihonlar"
+        verbose_name = "Imtihon"
+        verbose_name_plural = "Imtihonlar"
 
 class Testee(models.Model):
     user     = models.OneToOneField(User, on_delete=models.CASCADE)
     ask_name = models.BooleanField("Har safar ism So'ralsin", default=False)
     group    = models.ForeignKey(TesteeGroup, on_delete=models.SET_NULL, null=True)
     branch   = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True)
-    language = models.PositiveSmallIntegerField(choices=((0,'uz'),
-                                                         (1,'ru'),
-                                                         (2,'en')),
-                                                default=0)
     def __str__(self):
         return self.user.get_full_name()
     class Meta:
-         verbose_name = "Test topshiruvchi"
-         verbose_name_plural = "Test topshiruvchilar"
+        verbose_name = "Test topshiruvchi"
+        verbose_name_plural = "Test topshiruvchilar"
 
 class Question(models.Model):
     text     = models.TextField(max_length=500)
@@ -85,8 +85,8 @@ class Question(models.Model):
     def __str__(self):
         return self.text
     class Meta:
-         verbose_name = "Test Savoli"
-         verbose_name_plural = "Test savollari"
+        verbose_name = "Test Savoli"
+        verbose_name_plural = "Test savollari"
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -95,21 +95,19 @@ class Choice(models.Model):
     def __str__(self):
         return self.text
     class Meta:
-         verbose_name = "Variant"
-         verbose_name_plural = "Variantlar"
+        verbose_name = "Variant"
+        verbose_name_plural = "Variantlar"
 
 class Response(models.Model):
     testee      = models.ForeignKey(Testee, on_delete=models.CASCADE)
-    start_time  = models.DateTimeField("Test Boshlangan Vaqt", default=timezone.now)
+    start_time  = models.DateTimeField(_("Test Boshlangan Vaqt"), default=timezone.now)
     end_time    = models.DateTimeField('Tugallangan vaqt', null=True)
     is_finished = models.BooleanField(default=False)
     exam        = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True)
     questions   = models.ManyToManyField(Question)
     choices     = models.ManyToManyField(Choice, through='SelectedChoice')
-    language    = models.PositiveSmallIntegerField(choices=((0,'uz'),
-                                                         (1,'ru'),
-                                                         (2,'en')),
-                                                default=0)
+    language    = models.PositiveSmallIntegerField(choices=language_coice,
+                                                   default=0)
 
     def get_mark(self):
         return self.choices.aggregate(Sum('mark'))['mark__sum'] or 0

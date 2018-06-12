@@ -1,24 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load i18n %}
 <div class="card-in">
     {% if error == 408 %}
-    <h3 class="text-center">Testga ajratilgan vaqt tugadi</h3>
+    <h3 class="text-center">{% trans "Testga ajratilgan vaqt tugadi" %}</h3>
     {% else %}
-    <h3 class="text-center">Test qabul qilindi</h3>
+    <h3 class="text-center">{% trans "Test qabul qilindi" %}</h3>
     {% endif %}
     <table class="margin-auto">
-        <tr><td >Ism:</td><td >{{user.get_full_name}}</td></tr>
-        <tr><td >Filial:</td><td>{{ user.testee.branch }}</td></tr>
-        <tr><td>Testga berilgan vaqt:</td><td >{{ response.exam.test_time }} (soat:daqiqa:soniya)</td></tr>
-        <tr><td >Test kuni:</td><td>{{ test_day }}</td></tr>
-        <tr><td >Test boshlangan vaqt:</td><td >{{ start_time }}</td></tr>
-        <tr><td >Test tugallangan vaqt:</td><td >{{ end_time }}</td></tr>
-        <tr><td >Sarflangan vaqt:</td><td >{{ time_spent }} (soat:daqiqa:soniya)</td></tr>
-        <tr><td >Test mavzusi:</td><td >{% for category in categories %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</td></tr>
-        <tr><td >Savollar soni:</td><td >{{ question_set|length }}</td></tr>
-        <tr><td >Jami ball:</td><td >{{ response.max_mark }} ball</td></tr>
-        <tr><td >Test natijasi:</td><td >{{ response.get_mark }} ball ({{ mark_percent }})</td></tr>
+        {% trans "(soat:daqiqa:soniya)" as time_desc %}
+        {% trans "ball" as ball %}
+        <tr><td>{% trans "Ism" %}:</td><td >{{user.get_full_name}}</td></tr>
+        <tr><td>{% trans "Filial" %}:</td><td>{{ user.testee.branch }}</td></tr>
+        <tr><td>{% trans "Testga berilgan vaqt" %}:</td><td >{{ response.exam.test_time }} {{ time_desc }}</td></tr>
+        <tr><td>{% trans "Test kuni" %}:</td><td>{{ test_day }}</td></tr>
+        <tr><td>{% trans "Test boshlangan vaqt" %}:</td><td >{{ start_time }}</td></tr>
+        <tr><td>{% trans "Test tugallangan vaqt" %}:</td><td >{{ end_time }}</td></tr>
+        <tr><td>{% trans "Sarflangan vaqt" %}:</td><td >{{ time_spent }} {{ time_desc }}</td></tr>
+        <tr><td>{% trans "Test mavzusi" %}:</td><td >{% for category in categories %}{%if forloop.counter != 1 %}, {% endif %}{{ category }}{% endfor %}</td></tr>
+        <tr><td>{% trans "Jami ball" %}:</td><td >{{ response.max_mark }} {{ball}}</td></tr>
+        <tr><td>{% trans "Test natijasi" %}:</td><td >{{ response.get_mark }} {{ball}} ({{ mark_percent }})</td></tr>
     </table>
-    <div class="text-center"><a class="btn btn-default" href="{% url 'assessment:index' %}">Bosh sahifaga o'tish</a></div>
+    <div class="text-center"><a class="btn btn-default" href="{% url 'assessment:index' %}">{% trans "Bosh sahifaga o'tish" %}</a></div>
 </div>
 {% endblock %}

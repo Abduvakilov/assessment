@@ -5,6 +5,8 @@ from . import views
 app_name = 'assessment'
 urlpatterns = [
     path('', views.index, name='index'),
+    path('lang/', views.lang, name='lang'),
+    path('lang/<int:language_id>/', views.lang, name='lang'),
     path('start/', views.start, name='start'),
     path('test/<int:question_no>/', views.test, name='test'),
     path('tanla/<int:question_no>/', views.choose, name='tanla'),

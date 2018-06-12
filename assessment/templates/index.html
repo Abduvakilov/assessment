@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load i18n %}
 <div class="card-in">
     {% if exams %}
-    <p>Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:</p>
+    <p>{% trans "Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:" %}</p>
     <form action="{% url 'assessment:start' %}" method="POST">
-        <table class="table"><tr><th></th><th>Mavzular</th><th>Oxirgi muhlat</th><th>Davomiyligi</th><th></th></tr>
+        <table class="table"><tr><th></th><th>{% trans "Mavzular" %}</th><th>{% trans "Oxirgi muhlat" %}</th><th>{% trans "Davomiyligi" %}</th><th></th></tr>
 
             {% for exam in exams %}
             <tr>
@@ -18,7 +19,7 @@
             {% endfor %}
 
         </table>
-        <p>Agar tayyot bo'lsangiz Boshlash tugmasini bosing.</p>
+        <p>{% trans "Agar tayyot bo'lsangiz Boshlash tugmasini bosing." %}</p>
 
         {% csrf_token %}
         <div class="text-center">
@@ -27,9 +28,9 @@
     </form>
     {% else %}
     {% if error == 404 %}
-    Foydalanuvchi tiliga mos imtihonlar topilmadi
+    <p>{% trans "Foydalanuvchi tiliga mos imtihonlar topilmadi" %}</p>
     {% else %}
-    <p>Hozirda Siz uchun imtihonlar belgilanmagan</p>
+    <p>{% trans "Hozirda Siz uchun imtihonlar belgilanmagan" %}</p>
     {% endif %}
     {% endif %}
 </div>

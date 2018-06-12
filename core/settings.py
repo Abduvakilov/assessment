@@ -98,20 +98,20 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+# AUTH_PASSWORD_VALIDATORS = [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
 
 
 # Internationalization
@@ -128,13 +128,14 @@ USE_L10N = True
 USE_TZ = True
 
 LOCALE_PATHS = (
+    '/locale/',
     '/assessment/locale/',
 )
 
-ugettext = lambda s: s
 LANGUAGES = (
-    ('uz', ugettext('Uzbek')),
-    ('ru', ugettext('Russian')),
+    ('uz', "O'zbek"),
+    ('ru', "Rus"),
+    ('en', "Ingliz"),
 )
 
 # Static files (CSS, JavaScript, Images)

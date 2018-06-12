@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .card {
+        max-width: 400px;
+    }
+    li:hover {
+        background-color: #efefef;
+    }
+</style>
+<div class="card-in">
+    <ul class="list-group">
+        {% for id, language_code, language in languages %}
+        <a href="{% url 'assessment:lang' id %}"><li class="list-group-item text-center">{{ language }}</li></a>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
