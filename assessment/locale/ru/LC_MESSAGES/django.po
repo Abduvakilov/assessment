@@ -22,171 +22,171 @@ msgstr ""
 
 #: assessment/models.py:13
 msgid "Filial nomi"
-msgstr ""
+msgstr "Íàèìåíîâàíèå ôèëèàëà"
 
 #: assessment/models.py:14
 msgid "Filial kodi"
-msgstr ""
+msgstr "Êîä ôèëèàëà"
 
 #: assessment/models.py:18 assessment/templates/finish.html:14
 msgid "Filial"
-msgstr ""
+msgstr "Ôèëèàë"
 
 #: assessment/models.py:19
 msgid "Filiallar"
-msgstr ""
+msgstr "Ôèëèàëû"
 
 #: assessment/models.py:22
 msgid "Guruh Nomi"
-msgstr ""
+msgstr "Íàèìåíîâàíèå ãðóïïû"
 
 #: assessment/models.py:23
 msgid "Savollar soni"
-msgstr ""
+msgstr "Êîëè÷åñòâî âîïðîñîâ"
 
 #: assessment/models.py:24
 msgid "Savollar tili"
-msgstr ""
+msgstr "ßçûê âîïðîñîâ"
 
 #: assessment/models.py:34
 msgid "Savol Toifasi"
-msgstr ""
+msgstr "Êàòåãîðèÿ âîïðîñà"
 
 #: assessment/models.py:35
 msgid "Savol Toifalari"
-msgstr ""
+msgstr "Êàòåãîðèè âîïðîñîâ"
 
 #: assessment/models.py:103
 msgid "Test Boshlangan Vaqt"
-msgstr ""
+msgstr "Âðåìÿ íà÷àëà òåñòà"
 
 #: assessment/templates/base.html:17
 msgid "Xodimlar baholash testi"
-msgstr ""
+msgstr "Òåñò äëÿ îöåíêè ñîòðóäíèêîâ"
 
 #: assessment/templates/base.html:20
 msgid "Xodim filialga kiritilmagan"
-msgstr ""
+msgstr "Ñîòðóäíèê íå ââåäåí â ôèëèàë"
 
 #: assessment/templates/base.html:21
 msgid "Xodim guruhga kiritilmagan"
-msgstr ""
+msgstr "Ñîòðóäíèê íå ââåäåí â ãðóïïó"
 
 #: assessment/templates/base.html:25
 msgid "Chiqish"
-msgstr ""
+msgstr "Âûõîä"
 
 #: assessment/templates/finish.html:6
 msgid "Testga ajratilgan vaqt tugadi"
-msgstr ""
+msgstr "Âðåìÿ äëÿ òåñòèðîâàíèÿ âûøëî"
 
 #: assessment/templates/finish.html:8
 msgid "Test qabul qilindi"
-msgstr ""
+msgstr "Òåñò ïðèíÿò"
 
 #: assessment/templates/finish.html:11
 msgid "(soat:daqiqa:soniya)"
-msgstr ""
+msgstr "(âðåìÿ:ìèíóòà:ñåêóíäà)"
 
 #: assessment/templates/finish.html:12
 msgid "ball"
-msgstr ""
+msgstr "áàëë"
 
 #: assessment/templates/finish.html:13
 msgid "Ism"
-msgstr ""
+msgstr "Èìÿ"
 
 #: assessment/templates/finish.html:15
 msgid "Testga berilgan vaqt"
-msgstr ""
+msgstr "Âûäåëåííîå äëÿ òåñòà âðåìÿ"
 
 #: assessment/templates/finish.html:16
 msgid "Test kuni"
-msgstr ""
+msgstr "Äåíü òåñòà"
 
 #: assessment/templates/finish.html:17
 msgid "Test boshlangan vaqt"
-msgstr ""
+msgstr "Íà÷àëî òåñòà"
 
 #: assessment/templates/finish.html:18
 msgid "Test tugallangan vaqt"
-msgstr ""
+msgstr "Îêîí÷àíèå òåñòà"
 
 #: assessment/templates/finish.html:19
 msgid "Sarflangan vaqt"
-msgstr ""
+msgstr "Çàòðà÷åííîå âðåìÿ"
 
 #: assessment/templates/finish.html:20
 msgid "Test mavzusi"
-msgstr ""
+msgstr "Òåìàòèêà òåñòà"
 
 #: assessment/templates/finish.html:21
 msgid "Jami ball"
-msgstr ""
+msgstr "Âñåãî áàëëîâ"
 
 #: assessment/templates/finish.html:22 assessment/views.py:174
 msgid "Test natijasi"
-msgstr ""
+msgstr "Ðåçóëüòàòû òåñòà"
 
 #: assessment/templates/finish.html:24
 msgid "Bosh sahifaga o'tish"
-msgstr ""
+msgstr "Ïåðåéòè íà ãëàâíóþ ñòðàíèöó"
 
 #: assessment/templates/index.html:6
 msgid "Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:"
-msgstr ""
+msgstr "Ñïèñîê ýêçàìåíîâ äëÿ ñäà÷è"
 
 #: assessment/templates/index.html:8
 msgid "Mavzular"
-msgstr ""
+msgstr "Òåìû"
 
 #: assessment/templates/index.html:8
 msgid "Oxirgi muhlat"
-msgstr ""
+msgstr "Ïîñëåäíèé ñðîê"
 
 #: assessment/templates/index.html:8
 msgid "Davomiyligi"
-msgstr ""
+msgstr "Äëèòåëüíîñòü"
 
 #: assessment/templates/index.html:22
 msgid "Agar tayyot bo'lsangiz Boshlash tugmasini bosing."
-msgstr ""
+msgstr "Åñëè Âû ãîòîâû, íàæìèòå êíîïêó Íà÷àòü"
 
 #: assessment/templates/index.html:31
 msgid "Foydalanuvchi tiliga mos imtihonlar topilmadi"
-msgstr ""
+msgstr "Íå íàéäåíû òåñòû íà ÿçûêå ïîëüçîâàòåëÿ"
 
 #: assessment/templates/index.html:33
 msgid "Hozirda Siz uchun imtihonlar belgilanmagan"
-msgstr ""
+msgstr "Íà äàííûé ìîìåíò íåò íàçíà÷åííûõ äëÿ Âàñ òåñòîâ"
 
 #: assessment/templates/report.html:9
 msgid "Berilgan so'rov bo'yicha xech nima topilmadi"
-msgstr ""
+msgstr "Ïî äàííîìó çàïðîñó íè÷åãî íå íàéäåíî"
 
 #: assessment/templates/report.html:11
 msgid "Ko'rish"
-msgstr ""
+msgstr "Ïðîñìîòð"
 
 #: assessment/views.py:21
 msgid "Tilni Tanlang"
-msgstr ""
+msgstr "Âûáåðèòå ÿçûê"
 
 #: assessment/views.py:101
 msgid "{}-savol"
-msgstr ""
+msgstr "{}-âîïðîñ"
 
 #: assessment/views.py:121
 msgid "Javob tanlanmadi"
-msgstr ""
+msgstr "Îòâåò íå âûáðàí"
 
 #: assessment/views.py:153
 msgid "Testni yakunlash"
-msgstr ""
+msgstr "Çàêîí÷èòü òåñò"
 
 #: assessment/views.py:170 assessment/views.py:202
 msgid "%d-%B, %Y-yil"
-msgstr ""
+msgstr "%d-%B, %Y-ãîä"
 
 #: assessment/views.py:191
 msgid "Tester Zone"
@@ -194,8 +194,8 @@ msgstr ""
 
 #: assessment/views.py:197
 msgid "Ruhsat yo'q"
-msgstr ""
+msgstr "Íåò ðàçðåøåíèÿ"
 
 #: assessment/views.py:215
 msgid "Imtihon Natijalari"
-msgstr ""
+msgstr "Ðåçóëüòàòû ýêçàìåíà"
