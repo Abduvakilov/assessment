@@ -22,11 +22,11 @@ msgstr ""
 
 #: assessment/models.py:13 assessment/views.py:38 assessment/views.py:267
 msgid "Filial nomi"
-msgstr "Наименование филиала"
+msgstr "Филиал номи"
 
 #: assessment/models.py:14
 msgid "Filial kodi"
-msgstr "Код филиала"
+msgstr "Филиал коди"
 
 #: assessment/models.py:18 assessment/templates/finish.html:15
 #: assessment/templates/result.html:13 assessment/views.py:250
@@ -35,94 +35,88 @@ msgstr "Филиал"
 
 #: assessment/models.py:19
 msgid "Filiallar"
-msgstr "Филиалы"
+msgstr "Филиаллар"
 
 #: assessment/models.py:22
 msgid "Guruh Nomi"
-msgstr "Наименование группы"
+msgstr "Гурух номи"
 
 #: assessment/models.py:23 assessment/templates/result.html:20
 #: assessment/views.py:250
 msgid "Savollar soni"
-msgstr "Количество вопросов"
+msgstr "Саволлар сони"
 
 #: assessment/models.py:24
 msgid "Savollar tili"
-msgstr "Язык вопросов"
+msgstr "Саволлар тили"
 
 #: assessment/models.py:34
 msgid "Savol Toifasi"
-msgstr "Категория вопроса"
+msgstr "Савол тоифаси"
 
 #: assessment/models.py:35
 msgid "Savol Toifalari"
-msgstr "Категории вопросов"
+msgstr "Савол тоифалари"
 
 #: assessment/models.py:103
 msgid "Test Boshlangan Vaqt"
-msgstr "Время начала теста"
+msgstr "Тест бошланган вакт"
 
 #: assessment/templates/Tbase.html:24 assessment/templates/base.html:27
 msgid "Chiqish"
-msgstr "Выход"
+msgstr "Чикиш"
 
 #: assessment/templates/Tbase.html:31
-#, fuzzy
-#| msgid "Hozirda Siz uchun imtihonlar belgilanmagan"
 msgid "Siz uchun ruhsat berilmagan"
-msgstr "На данный момент нет назначенных для Вас тестов"
+msgstr "Сиз учун рухсат бериланмаган"
 
 #: assessment/templates/base.html:19
 msgid "Xodimlar baholash testi"
-msgstr "Тест для оценки сотрудников"
+msgstr "Ходимлар бахолаш тести"
 
 #: assessment/templates/base.html:22
 msgid "Xodim filialga kiritilmagan"
-msgstr "Сотрудник не введен в филиал"
+msgstr "Ходим филиалга киритилмаган"
 
 #: assessment/templates/base.html:23
 msgid "Xodim guruhga kiritilmagan"
-msgstr "Сотрудник не введен в группу"
+msgstr "Ходим гурухга киритилмаган"
 
 #: assessment/templates/confirm.html:7
 msgid "Quyidagi savollar javobsiz qolgan"
-msgstr ""
+msgstr "Куйидаги саволлар жавобсиз колган"
 
 #: assessment/templates/confirm.html:12
 msgid "Tahrirlash"
-msgstr ""
+msgstr "Тахрирлаш"
 
 #: assessment/templates/confirm.html:15
-#, fuzzy
-#| msgid "Javob tanlanmadi"
 msgid "Javob tanlanmagan"
-msgstr "Ответ не выбран"
+msgstr "Жавоб танланмаган"
 
 #: assessment/templates/confirm.html:20
-#, fuzzy
-#| msgid "Agar tayyot bo'lsangiz Boshlash tugmasini bosing."
 msgid "Agar javoblaringiz qat'iy bo'lsa \"Testni yakunlash\" tugmasini bosing"
-msgstr "Если Вы готовы, нажмите кнопку Начать"
+msgstr "Агар жавобингиз катий булса \"Тестни якунлаш\" тугмасини босинг"
 
 #: assessment/templates/confirm.html:22 assessment/views.py:153
 msgid "Testni yakunlash"
-msgstr "Закончить тест"
+msgstr "Тестни якунлаш"
 
 #: assessment/templates/confirm.html:23
 msgid "Ortga qaytish"
-msgstr ""
+msgstr "Ортга кайтиш"
 
 #: assessment/templates/finish.html:6
 msgid "Testga ajratilgan vaqt tugadi"
-msgstr "Время для тестирования вышло"
+msgstr "Тестга ажратилган вакт тугади"
 
 #: assessment/templates/finish.html:8
 msgid "Test qabul qilindi"
-msgstr "Тест принят"
+msgstr "Тест кабул килинди"
 
 #: assessment/templates/finish.html:11
 msgid "(soat:daqiqa:soniya)"
-msgstr "(время:минута:секунда)"
+msgstr "(соат:дакика:сония)"
 
 #: assessment/templates/finish.html:12 assessment/templates/result.html:11
 msgid "ball"
@@ -130,130 +124,130 @@ msgstr "балл"
 
 #: assessment/templates/finish.html:13 assessment/templates/result.html:10
 msgid "Kiritilmagan"
-msgstr ""
+msgstr "Киритилмаган"
 
 #: assessment/templates/finish.html:14 assessment/templates/result.html:12
 msgid "Ism"
-msgstr "Имя"
+msgstr "Исм"
 
 #: assessment/templates/finish.html:16 assessment/templates/result.html:14
 msgid "Testga berilgan vaqt"
-msgstr "Выделенное для теста время"
+msgstr "Тестга берилган вакт"
 
 #: assessment/templates/finish.html:17 assessment/templates/result.html:15
 msgid "Test kuni"
-msgstr "День теста"
+msgstr "Тест куни"
 
 #: assessment/templates/finish.html:18 assessment/templates/result.html:16
 msgid "Test boshlangan vaqt"
-msgstr "Начало теста"
+msgstr "Тест бошланган вакт"
 
 #: assessment/templates/finish.html:19 assessment/templates/result.html:17
 msgid "Test tugallangan vaqt"
-msgstr "Окончание теста"
+msgstr "Тест тугалланган вакт"
 
 #: assessment/templates/finish.html:20 assessment/templates/result.html:18
 msgid "Sarflangan vaqt"
-msgstr "Затраченное время"
+msgstr "Сарфланган вакт"
 
 #: assessment/templates/finish.html:21 assessment/templates/result.html:19
 msgid "Test mavzusi"
-msgstr "Тематика теста"
+msgstr "Тест мавзуси"
 
 #: assessment/templates/finish.html:22 assessment/templates/result.html:21
 msgid "Jami ball"
-msgstr "Всего баллов"
+msgstr "Жами балл"
 
 #: assessment/templates/finish.html:23 assessment/templates/result.html:22
 #: assessment/views.py:174
 msgid "Test natijasi"
-msgstr "Результаты теста"
+msgstr "Тест натижаси"
 
 #: assessment/templates/finish.html:25
 msgid "Bosh sahifaga o'tish"
-msgstr "Перейти на главную страницу"
+msgstr "Бош сахифага утиш"
 
 #: assessment/templates/index.html:6
 msgid "Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:"
-msgstr "Список экзаменов для сдачи"
+msgstr "Сиз топширишингиз керак булган имтихонлар руйхати"
 
 #: assessment/templates/index.html:8
 msgid "Mavzular"
-msgstr "Темы"
+msgstr "Мавзулар"
 
 #: assessment/templates/index.html:8
 msgid "Oxirgi muhlat"
-msgstr "Последний срок"
+msgstr "Охирги мухлат"
 
 #: assessment/templates/index.html:8
 msgid "Davomiyligi"
-msgstr "Длительность"
+msgstr "Давомийлиги"
 
 #: assessment/templates/index.html:22
 msgid "Agar tayyot bo'lsangiz Boshlash tugmasini bosing."
-msgstr "Если Вы готовы, нажмите кнопку Начать"
+msgstr "Агар тайёр булсангиз Бошлаш тугмасини босинг"
 
 #: assessment/templates/index.html:26
 msgid "Boshlash"
-msgstr ""
+msgstr "Бошлаш"
 
 #: assessment/templates/index.html:31
 msgid "Foydalanuvchi tiliga mos imtihonlar topilmadi"
-msgstr "Не найдены тесты на языке пользователя"
+msgstr "Фойдаланувчи тилига мос имтихонлар топилмади"
 
 #: assessment/templates/index.html:33
 msgid "Hozirda Siz uchun imtihonlar belgilanmagan"
-msgstr "На данный момент нет назначенных для Вас тестов"
+msgstr "Хозирда Сиз учун имтихонлар белгиланмаган"
 
 #: assessment/templates/report.html:9
 msgid "Berilgan so'rov bo'yicha xech nima topilmadi"
-msgstr "По данному запросу ничего не найдено"
+msgstr "Берилган суров буйича хеч нима топилмади"
 
 #: assessment/templates/report.html:11
 msgid "Ko'rish"
-msgstr "Просмотр"
+msgstr "Куриш"
 
 #: assessment/templates/result.html:26
 msgid "Javob"
-msgstr ""
+msgstr "Жавоб"
 
 #: assessment/templates/result.html:31
 #, fuzzy
-#| msgid "Javob tanlanmadi"
+#| msgid "Javob tanlanmagan"
 msgid "Tanlanmagan"
-msgstr "Ответ не выбран"
+msgstr "Жавоб танланмаган"
 
 #: assessment/templates/test.html:20
 msgid "Tanla"
-msgstr ""
+msgstr "Танла"
 
 #: assessment/templates/test.html:24
 msgid "Avvalgisi"
-msgstr ""
+msgstr "Аввалгиси"
 
 #: assessment/templates/test.html:30
 msgid "Keyingisi"
-msgstr ""
+msgstr "Кейингиси"
 
 #: assessment/templates/test.html:31
 msgid "Tamomlash"
-msgstr ""
+msgstr "Тамомлаш"
 
 #: assessment/views.py:21
 msgid "Tilni Tanlang"
-msgstr "Выберите язык"
+msgstr "Тилни танланг"
 
 #: assessment/views.py:101
 msgid "{}-savol"
-msgstr "{}-вопрос"
+msgstr "{} савол"
 
 #: assessment/views.py:121
 msgid "Javob tanlanmadi"
-msgstr "Ответ не выбран"
+msgstr "Жавоб танланмади"
 
 #: assessment/views.py:170 assessment/views.py:202
 msgid "%d-%B, %Y-yil"
-msgstr "%d-%B, %Y-год"
+msgstr "%d-%B, %Y-йил"
 
 #: assessment/views.py:191
 msgid "Tester Zone"
@@ -261,62 +255,54 @@ msgstr ""
 
 #: assessment/views.py:197
 msgid "Ruhsat yo'q"
-msgstr "Нет разрешения"
+msgstr "Рухсат йук"
 
 #: assessment/views.py:215 assessment/views.py:292
 msgid "Imtihon Natijalari"
-msgstr "Результаты экзамена"
+msgstr "Имтихон натижалари"
 
 #: assessment/views.py:250
 msgid "Ism Familiyasi"
-msgstr ""
+msgstr "Исм шарифи"
 
 #: assessment/views.py:250
-#, fuzzy
-#| msgid "Imtihon Natijalari"
 msgid "Imtihon kuni"
-msgstr "Результаты экзамена"
+msgstr "Имтихон куни"
 
 #: assessment/views.py:250
-#, fuzzy
-#| msgid "Davomiyligi"
 msgid "Davomiyligi (daq)"
-msgstr "Длительность"
+msgstr "Давомийлиги (дак)"
 
 #: assessment/views.py:250
 msgid "Ball"
-msgstr ""
+msgstr "Балл"
 
 #: assessment/views.py:250
 #, fuzzy
 #| msgid "Jami ball"
 msgid "To'liq ball"
-msgstr "Всего баллов"
+msgstr "Жами балл"
 
 #: assessment/views.py:250
 msgid "Yo'nalish"
-msgstr ""
+msgstr "Йуналиш"
 
 #: assessment/views.py:270
-#, fuzzy
-#| msgid "Guruh Nomi"
 msgid "Guruh nomi"
-msgstr "Наименование группы"
+msgstr "Гурух номи"
 
 #: assessment/views.py:272
 msgid "Minimum"
-msgstr ""
+msgstr "Минимум"
 
 #: assessment/views.py:272
 msgid "O'rtacha"
-msgstr ""
+msgstr "Уртача"
 
 #: assessment/views.py:272
 msgid "Maksimum"
-msgstr ""
+msgstr "Максимум"
 
 #: assessment/views.py:272
-#, fuzzy
-#| msgid "Testga ajratilgan vaqt tugadi"
 msgid "Testga sarflangan vaqt (o'rtacha)"
-msgstr "Время для тестирования вышло"
+msgstr "Тестга сарфланган вакт (урташча)"

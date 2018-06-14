@@ -38,21 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'assessment.apps.AssessmentConfig',
-    # 'tester.apps.TesterConfig',
-    # 'report_builder',
-    # 'rest_framework',
-    # 'autofixture', # Fills base with random content To be removed
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware', # Multiple Language
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -89,7 +85,7 @@ DATABASES = {
         'NAME': 'assessment',
         'USER': 'root',
         'PASSWORD': '1',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
@@ -128,13 +124,14 @@ USE_L10N = True
 USE_TZ = True
 
 LOCALE_PATHS = (
-    '/locale/',
-    '/assessment/locale/',
+    os.path.join(BASE_DIR, "locale"),
+    os.path.join(BASE_DIR, "assessment/locale"),
 )
 
+from django.utils.translation import ugettext_lazy as _
 LANGUAGES = (
-    ('uz', "O'zbek"),
-    ('ru', "Rus"),
+    ('uz', _("Узбекча")),
+    ('ru', _("Rus")),
     ('en', "Ingliz"),
 )
 

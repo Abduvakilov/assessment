@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 <div class="time"><span id="bar"></span><p id="time_left" class="text-right">...</p></div>
 <div class="card-in">
@@ -16,18 +17,18 @@
         {{ choice.text|linebreaksbr }}</label><br></div>
         {% endfor %}
         <p>{{error_message|default:""}}</p>
-        <div class="text-center"><div class="red" id="valErr"></div><input type="submit" class="btn btn-success" value="Tanla" onclick="return check()"/></div>
+        <div class="text-center"><div class="red" id="valErr"></div><input type="submit" class="btn btn-success" value="{% trans "Tanla" %}" onclick="return check()"/></div>
     </form>
 
     <div class="text-center pages">
-        {% if prev %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' prev %}"><span class="glyphicon glyphicon-chevron-left"></span> Avvalgisi</a>{% endif %}
+        {% if prev %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' prev %}"><span class="glyphicon glyphicon-chevron-left"></span> {%trans "Avvalgisi" %}</a>{% endif %}
         {% for question in questions %}
         <a {% if question %}class="done"{% endif %} href="{% url 'assessment:test' forloop.counter %}">
             {{ forloop.counter }}
         </a>
         {% endfor %}
-        {% if next %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' next %}">Keyingisi <span class="glyphicon glyphicon-chevron-right"></span></a>
-        {% else %}<a class="btn btn-xs btn-default" href="{% url 'assessment:confirm' %}">Tamomlash</a>
+        {% if next %}<a class="btn btn-xs btn-default" href="{% url 'assessment:test' next %}">{% trans "Keyingisi" %} <span class="glyphicon glyphicon-chevron-right"></span></a>
+        {% else %}<a class="btn btn-xs btn-default" href="{% url 'assessment:confirm' %}">{% blocktrans %}Tamomlash{% endblocktrans %}</a>
         {% endif %}
     </div>
 </div>

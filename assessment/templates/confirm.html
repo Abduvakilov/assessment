@@ -1,25 +1,26 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block content %}
 <div class="time"><span id="bar"></span><p id="time_left" class="text-right">...</p></div>
 <div class="card-in">
     {% if questions_missed %}
-    <h3>Quyidagi savollar javobsiz qolgan</h3>
+    <h3>{% blocktrans %}Quyidagi savollar javobsiz qolgan{% endblocktrans %}</h3>
     <ol>{% for question in questions_missed %}
         <li value="{{ question.number }}"><b>{{question.text}}</b></li>
         <span>
             <a class="pull-right" href="{% url 'assessment:test' forloop.counter %}">
-                <span class="glyphicon glyphicon-edit"></span> Tahrirlash
+                <span class="glyphicon glyphicon-edit"></span> {% trans "Tahrirlash" %}
             </a>
         </span>
-        <span class="red"><span class="glyphicon glyphicon-unchecked"></span> Javob tanlanmagan</span>
+        <span class="red"><span class="glyphicon glyphicon-unchecked"></span> {% trans "Javob tanlanmagan" %}</span>
         <br>
         {% endfor %}
     </ol>
     {% endif %}
-    <p>Agar javoblaringiz qat'iy bo'lsa "Testni yakunlash" tugmasini bosing</p>
+    <p>{% blocktrans %}Agar javoblaringiz qat'iy bo'lsa "Testni yakunlash" tugmasini bosing{% endblocktrans %}</p>
     <div class="text-center">
-        <a class="btn btn-primary" href="{% url 'assessment:finish' %}">Testni yakunlash</a>
-        <a class="btn" href="{% url 'assessment:test' 1 %}">Ortga qaytish</a>
+        <a class="btn btn-primary" href="{% url 'assessment:finish' %}">{% trans "Testni yakunlash" %}</a>
+        <a class="btn" href="{% url 'assessment:test' 1 %}">{% trans "Ortga qaytish" %}</a>
     </div>
 </div>
 <script>

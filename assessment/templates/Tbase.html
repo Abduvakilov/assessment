@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <!doctype html>
 
@@ -19,16 +20,15 @@
                 <a href="{% url 'assessment:tester' %}" class="navbar-brand" >Tester Zone</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">{{ user.first_name }} {{ user.last_name }}</a></li>
-                <li><a href="#">{{ user.testee.group.name|default_if_none:"Xodim guruhga kiritilmagan" }}</a></li>
-                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Chiqish</a></li>
+                <li><a href="#">{{ user.get_full_name }}</a></li>
+                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> {% trans "Chiqish" %}</a></li>
             </ul>
         </div>
     </nav>
     <div class="card">
         <div class="card-in">
             {% if error == 403 %}
-            <p>Siz uchun ruhsat berilmagan</p>
+            <p>{% trans "Siz uchun ruhsat berilmagan" %}</p>
             {% else %}
             {% block content %}
             {% endblock %}
@@ -37,7 +37,6 @@
     </div>
 </div>
 <footer class="footer-copyright text-center">© 2018 Dilshodjon Abduvakilov</footer>
-<script src="{% static 'js/main.js' %}"></script>
 {% block script %}
 {% endblock %}
 </body>

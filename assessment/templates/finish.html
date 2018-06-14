@@ -10,8 +10,9 @@
     <table class="margin-auto">
         {% trans "(soat:daqiqa:soniya)" as time_desc %}
         {% trans "ball" as ball %}
-        <tr><td>{% trans "Ism" %}:</td><td >{{user.get_full_name}}</td></tr>
-        <tr><td>{% trans "Filial" %}:</td><td>{{ user.testee.branch }}</td></tr>
+        {% trans "Kiritilmagan" as none %}
+        <tr><td>{% trans "Ism" %}:</td><td >{{user.get_full_name|default:none}}</td></tr>
+        <tr><td>{% trans "Filial" %}:</td><td>{{ user.testee.branch|default:none }}</td></tr>
         <tr><td>{% trans "Testga berilgan vaqt" %}:</td><td >{{ response.exam.test_time }} {{ time_desc }}</td></tr>
         <tr><td>{% trans "Test kuni" %}:</td><td>{{ test_day }}</td></tr>
         <tr><td>{% trans "Test boshlangan vaqt" %}:</td><td >{{ start_time }}</td></tr>

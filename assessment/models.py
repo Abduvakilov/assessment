@@ -4,10 +4,12 @@ from django.utils import timezone
 from django.db.models import Max, Sum
 from django.utils.translation import gettext_lazy as _
 
-languages = [(0, 'uz', "O'zbek"),
+languages = [(0, 'uz', "Узбекча"),
              (1, 'ru', "Русский"),
-             (2, 'en', "English")]
+             # (2, 'en', "English")
+             ]
 language_coice = [(x, z) for x, y, z in languages]
+deault_language = languages[0]
 
 class Branch(models.Model):
     name = models.CharField(_('Filial nomi'), max_length=127)

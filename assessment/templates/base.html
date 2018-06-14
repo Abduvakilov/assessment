@@ -16,7 +16,7 @@
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" >{% trans "Xodimlar baholash testi" %}</a>
+                <a class="navbar-brand" >{% blocktrans %}Xodimlar baholash testi{% endblocktrans %}</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 {% trans "Xodim filialga kiritilmagan" as branch %}
@@ -24,7 +24,7 @@
                 <li><a href="#">{{ user.get_full_name }}</a></li>
                 <li><a href="#">{{ user.testee.branch|default_if_none:branch }}</a></li>
                 <li><a href="#">{{ user.testee.group|default_if_none:group }}</a></li>
-                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> {%trans "Chiqish" %}</a></li>
+                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> {% blocktrans %}Chiqish{% endblocktrans %}</a></li>
             </ul>
         </div>
     </nav>
@@ -34,6 +34,7 @@
     </div>
 </div>
 <footer class="footer-copyright text-center">© 2018</footer>
+<script src="{% static "js/translation.js" %}"></script>
 <script src="{% static "js/main.js" %}"></script>
 {% block script %}
 {% endblock %}

@@ -1,0 +1,199 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-12 17:01+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: assessment/models.py:13
+msgid "Filial nomi"
+msgstr ""
+
+#: assessment/models.py:14
+msgid "Filial kodi"
+msgstr ""
+
+#: assessment/models.py:18 assessment/templates/finish.html:14
+msgid "Filial"
+msgstr ""
+
+#: assessment/models.py:19
+msgid "Filiallar"
+msgstr ""
+
+#: assessment/models.py:22
+msgid "Guruh Nomi"
+msgstr ""
+
+#: assessment/models.py:23
+msgid "Savollar soni"
+msgstr ""
+
+#: assessment/models.py:24
+msgid "Savollar tili"
+msgstr ""
+
+#: assessment/models.py:34
+msgid "Savol Toifasi"
+msgstr ""
+
+#: assessment/models.py:35
+msgid "Savol Toifalari"
+msgstr ""
+
+#: assessment/models.py:103
+msgid "Test Boshlangan Vaqt"
+msgstr ""
+
+#: assessment/templates/base.html:17
+msgid "Xodimlar baholash testi"
+msgstr "Staff assessment Test"
+
+#: assessment/templates/base.html:20
+msgid "Xodim filialga kiritilmagan"
+msgstr ""
+
+#: assessment/templates/base.html:21
+msgid "Xodim guruhga kiritilmagan"
+msgstr ""
+
+#: assessment/templates/base.html:25
+msgid "Chiqish"
+msgstr ""
+
+#: assessment/templates/finish.html:6
+msgid "Testga ajratilgan vaqt tugadi"
+msgstr ""
+
+#: assessment/templates/finish.html:8
+msgid "Test qabul qilindi"
+msgstr ""
+
+#: assessment/templates/finish.html:11
+msgid "(soat:daqiqa:soniya)"
+msgstr ""
+
+#: assessment/templates/finish.html:12
+msgid "ball"
+msgstr ""
+
+#: assessment/templates/finish.html:13
+msgid "Ism"
+msgstr ""
+
+#: assessment/templates/finish.html:15
+msgid "Testga berilgan vaqt"
+msgstr ""
+
+#: assessment/templates/finish.html:16
+msgid "Test kuni"
+msgstr ""
+
+#: assessment/templates/finish.html:17
+msgid "Test boshlangan vaqt"
+msgstr ""
+
+#: assessment/templates/finish.html:18
+msgid "Test tugallangan vaqt"
+msgstr ""
+
+#: assessment/templates/finish.html:19
+msgid "Sarflangan vaqt"
+msgstr ""
+
+#: assessment/templates/finish.html:20
+msgid "Test mavzusi"
+msgstr ""
+
+#: assessment/templates/finish.html:21
+msgid "Jami ball"
+msgstr ""
+
+#: assessment/templates/finish.html:22 assessment/views.py:174
+msgid "Test natijasi"
+msgstr ""
+
+#: assessment/templates/finish.html:24
+msgid "Bosh sahifaga o'tish"
+msgstr ""
+
+#: assessment/templates/index.html:6
+msgid "Siz topshirishingiz kerak bo'lgan imtihonlar ro'yhati:"
+msgstr ""
+
+#: assessment/templates/index.html:8
+msgid "Mavzular"
+msgstr ""
+
+#: assessment/templates/index.html:8
+msgid "Oxirgi muhlat"
+msgstr ""
+
+#: assessment/templates/index.html:8
+msgid "Davomiyligi"
+msgstr ""
+
+#: assessment/templates/index.html:22
+msgid "Agar tayyot bo'lsangiz Boshlash tugmasini bosing."
+msgstr ""
+
+#: assessment/templates/index.html:31
+msgid "Foydalanuvchi tiliga mos imtihonlar topilmadi"
+msgstr "There are no tests in English"
+
+#: assessment/templates/index.html:33
+msgid "Hozirda Siz uchun imtihonlar belgilanmagan"
+msgstr "No tests for you yet"
+
+#: assessment/templates/report.html:9
+msgid "Berilgan so'rov bo'yicha xech nima topilmadi"
+msgstr ""
+
+#: assessment/templates/report.html:11
+msgid "Ko'rish"
+msgstr ""
+
+#: assessment/views.py:21
+msgid "Tilni Tanlang"
+msgstr ""
+
+#: assessment/views.py:101
+msgid "{}-savol"
+msgstr ""
+
+#: assessment/views.py:121
+msgid "Javob tanlanmadi"
+msgstr ""
+
+#: assessment/views.py:153
+msgid "Testni yakunlash"
+msgstr ""
+
+#: assessment/views.py:170 assessment/views.py:202
+msgid "%d-%B, %Y-yil"
+msgstr ""
+
+#: assessment/views.py:191
+msgid "Tester Zone"
+msgstr ""
+
+#: assessment/views.py:197
+msgid "Ruhsat yo'q"
+msgstr ""
+
+#: assessment/views.py:215
+msgid "Imtihon Natijalari"
+msgstr ""

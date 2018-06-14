@@ -35,7 +35,7 @@ def index(request):
         response = Response.objects.get(pk=request.session['responseid'])
         if response.is_finished is False:
             return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
-
+    print(_("Filial nomi"))
     lang_code = request.session['lang_code']
     testee = request.user.testee
     exams = Exam.objects.filter(groups=testee.group,
@@ -146,7 +146,7 @@ def confirm(request):
         choice = choices.filter(question=question)
         if not choice.exists():
             questions_missed += [{
-                'number' : number,
+                'number' : number+1,
                 'text' : question.text,
                 'choice' : choice.values_list('text', flat=True)
             }]
@@ -193,6 +193,10 @@ def tester(request):
 
 @login_required
 def result(request, response_id):
+    language = deault_language[1]
+    translation.activate(language)
+    request.session[translation.LANGUAGE_SESSION_KEY] = language
+
     if not request.user.is_staff:
         return HttpResponseForbidden(_("Ruhsat yo'q"))  # No Permission Forbidden
 
@@ -247,14 +251,14 @@ def report(request):
             elif request.POST['summarize'] == '2': # Guruh bo'yicha
                 rows = summarize(TesteeGroup, responses)
             else:
-                rows = [['Ism Familiyasi', 'Imtihon kuni', 'Davomiyligi (daq)', 'Ball', "To'liq ball", 'Savollar soni', "Yo'nalish", 'Filial' ]]
+                rows = [[_('Ism Familiyasi'), _('Imtihon kuni'), _('Davomiyligi (daq)'), _('Ball'), _("To'liq ball"), _('Savollar soni'), _("Yo'nalish"), _('Filial') ]]
                 rows += [[response.testee.user.get_full_name(), timezone.make_naive(response.start_time),
                           response.get_test_time(), response.get_mark(), response.max_mark(),
                           response.questions.count(), getattr(response.testee.group, 'name', ''), getattr(response.testee.branch, 'name', '')] for response in responses]
 
             filename = "Test-"+timezone.now().strftime('%d.%m.%y')
             if 'csv' not in request.POST:
-                return export_xls(rows, filename)
+                return export_xls(rows, filename, bool(request.POST['summarize']))
             else:
                 return export_csv(rows, filename)
     else:
@@ -264,12 +268,12 @@ def report(request):
 
 def summarize(Class, responses):
     if Class == Branch:
-        str = "Filial"
+        str = _("Filial nomi")
         code= 'testee__branch'
     elif Class == TesteeGroup:
-        str = "Guruh"
+        str = _("Guruh nomi")
         code= 'testee__group'
-    rows = [[str+' nomi', 'Minimum', "O'rtacha", 'Maksimum', "Testga sarflangan vaqt (o'rtacha)"]]
+    rows = [[str, _('Minimum'), _("O'rtacha"), _('Maksimum'), _("Testga sarflangan vaqt (o'rtacha)")]]
     for item in Class.objects.all():
         filtered = responses.filter(**{code:item})
         if filtered:
@@ -284,42 +288,45 @@ def summarize(Class, responses):
             rows += [[item.name, '-', '-', '-', '-']]
     return rows
 
+def export_xls(rows, filename, is_summary):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="{}.xls"'.format(filename)
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet(_('Imtihon Natijalari'))
+
+    # Sheet header, first row
+    body_format = xlwt.XFStyle()
+    body_format.font.bold = True
+    for col_num in range(len(rows[0])):
+        ws.write(0, col_num, rows[0][col_num], body_format)
+    del rows[0]
+
+    # Sheet body, remaining rows
+    body_format.font.bold = False
+    date_format = xlwt.XFStyle()
+    date_format.num_format_str = 'dd.mm.yy'
+
+    def get_type(col_num):
+        if is_summary:
+            return body_format
+        if col_num == 1:
+            return date_format
+        return body_format
+    row_num = 1
+    for row in rows:
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], get_type(col_num))
+        row_num += 1
+
+    wb.save(response)
+    return response
+
 class Echo:
     # An object that implements just the write method of the file-like interface
     def write(self, value):
         #Write the value by returning it, instead of storing in a buffer.
         return value
-
-def export_xls(rows, filename):
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="{}.xls"'.format(filename)
-
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('Imtihon Natijalari')
-
-    # Sheet header, first row
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
-    for col_num in range(len(rows[0])):
-        ws.write(0, col_num, rows[0][col_num], font_style)
-    del rows[0]
-
-    # Sheet body, remaining rows
-    font_style = xlwt.XFStyle()
-    date_format = xlwt.XFStyle()
-    date_format.num_format_str = 'dd.mm.yy'
-
-    row_num = 1
-    for row in rows:
-        for col_num in range(len(row)):
-            if col_num !=1:
-                ws.write(row_num, col_num, row[col_num], font_style)
-            else:
-                ws.write(row_num, col_num, row[col_num], date_format)
-        row_num += 1
-
-    wb.save(response)
-    return response
 
 def export_csv(rows, filename):
     pseudo_buffer = Echo()

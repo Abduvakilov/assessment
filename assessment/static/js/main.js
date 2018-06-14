@@ -14,7 +14,7 @@ function timeToString(time) {
     if (time>0){
         var hours = Math.floor(time / 3600);
         var minutes = Math.floor(time / 60) % 60;
-        return (hours ? hours + _[" soat "]:"") + minutes + _[" daqiqa"];
+        return (hours ? hours + " " + _["soat"]:"") + " " + minutes + " " + _["daqiqa"];
     } else {
         return;
     }
@@ -32,11 +32,7 @@ function check() {
 function setTimeLeft(){
 
     bar.style.width = Math.min(1-distance/testTime, 1) * 100 + "%";
-    element.innerHTML = timeToString(distance) ? _[`$(timeToString(distance)) vaqtingiz qoldi] : _["Vaqt Tugadi"];
+    element.innerHTML = timeToString(distance) ? _["% vaqtingiz qoldi"].replace("%", timeToString(distance)) : _["Vaqt Tugadi"];
 }
 
 setTimeLeft()
-
-var _ = {
-
-}
