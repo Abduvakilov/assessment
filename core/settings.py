@@ -131,8 +131,8 @@ LOCALE_PATHS = (
 from django.utils.translation import ugettext_lazy as _
 LANGUAGES = (
     ('uz', _("Узбекча")),
-    ('ru', _("Rus")),
-    ('en', "Ingliz"),
+    ('ru', _("Русча")),
+    ('en', _("Инглизча")),
 )
 
 # Static files (CSS, JavaScript, Images)

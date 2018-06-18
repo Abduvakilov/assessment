@@ -1,9 +1,9 @@
 var element  = document.getElementById("time_left")
 var bar = document.getElementById('bar');
 if (element) {
-    setTimeLeft()
     var x = setInterval(function() {
       distance -= 10;
+      setTimeLeft()
       if (distance < 0) {
         clearInterval(x);
         element.innerHTML = _["Vaqt Tugadi"];
@@ -30,7 +30,6 @@ function check() {
 }
 
 function setTimeLeft(){
-
     bar.style.width = Math.min(1-distance/testTime, 1) * 100 + "%";
     element.innerHTML = timeToString(distance) ? _["% vaqtingiz qoldi"].replace("%", timeToString(distance)) : _["Vaqt Tugadi"];
 }

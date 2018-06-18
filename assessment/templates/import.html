@@ -1,0 +1,15 @@
+{% extends 'Tbase.html' %}
+{% block content %}
+{% load i18n %}
+<form action="{% url 'assessment:import' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        <input type="file" name="file" required>
+        {% if error %}
+            <tr class="red" id="error"><td></td><td>{{ error }}</td></tr>
+        {% endif %}
+        <tr><td></td><td><input type="submit" value="{% trans "Ko'rish" %}" onclick="document.getElementById('error').innerHTML ='';"/></td></tr>
+    </table>
+
+</form>
+{% endblock %}

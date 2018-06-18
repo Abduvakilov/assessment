@@ -187,13 +187,71 @@ def finish(request):
 def tester(request):
     error = None
     if not request.user.is_staff:
-        error = 403
-    return render(request, 'tester.html', {'title' : _('Tester Zone'),'error': error})  # No Permission Forbidden
+        error = 403 # No Permission Forbidden
+    return render(request, 'tester.html', {'title' : _('Tester Zone'),'error': error})
+
+
+@login_required
+def import_questions(request):
+    def response_with_error(error):
+        return render(request, 'import.html', {'title': _('Tester Zone'), 'error': error})
+    if not request.user.is_staff:
+        return response_with_error("Ruhsat yo'q") # Forbidden
+    if request.method == 'POST':
+        if 'txt' not in request.FILES['file'].name:
+            return response_with_error("Faqat .txt formatidagi fayl yuklanishi mumkin")   # wrong extension
+
+    try:
+        txt_to_import = request.FILES['file'].read().decode('utf8')
+        rows = [x.strip() for x in txt_to_import.split("\n") if x.strip()]
+        categories = [x[1:].strip() for x in rows if x.startswith("?")] # Get category line and cut ? mark
+        categories_found = Category.objects.filter(name__in=categories)
+        if len(categories) == 0:
+            return response_with_error("Savollar toifalari to'g'ri kiritilganinga ishonch xosil qiling") # Categories not found
+        if len(categories) != len(categories_found):
+            return response_with_error("Savollar toifalari to'g'ri kiritilganinga ishonch xosil qiling") # Categories not found
+
+        print(rows)
+        category_no = -1 # negative to make zero after increment
+        question_no = -1
+        question_started = False
+        question_list = []
+        def create_choice(row, mark):
+            global question_started
+            if question_started:
+                question_started = False
+                question_list[question_no].save()
+            Choice.objects.create(question=question_list[question_no],
+                                  text=row[1:].strip(),
+                                  mark=mark)
+        for row in rows:
+            global question_started
+            if row.startswith('-'):
+                create_choice(row, 0)
+            elif row.startswith('+'):
+                create_choice(row, 1)
+            elif row.startswith('?'):
+                category_no += 1
+                category = categories_found[category_no]
+                print(category_no)
+                print(question_no)
+            elif not question_started:
+                question_no += 1
+                question_started = True
+                question_list.append( Question(text=row,
+                                               category=category) )
+            else:
+                question_list[question_no].text += "\n"+row
+
+        except Exception:
+            return response_with_error("")
+
+    return render(request, 'import.html', {'title': _('Tester Zone')})
 
 
 @login_required
 def result(request, response_id):
-    language = deault_language[1]
+    language = languages[0][1]
     translation.activate(language)
     request.session[translation.LANGUAGE_SESSION_KEY] = language
 
@@ -270,7 +328,7 @@ def summarize(Class, responses):
     if Class == Branch:
         str = _("Filial nomi")
         code= 'testee__branch'
-    elif Class == TesteeGroup:
+    else:
         str = _("Guruh nomi")
         code= 'testee__group'
     rows = [[str, _('Minimum'), _("O'rtacha"), _('Maksimum'), _("Testga sarflangan vaqt (o'rtacha)")]]

@@ -9,7 +9,6 @@ languages = [(0, 'uz', "Узбекча"),
              # (2, 'en', "English")
              ]
 language_coice = [(x, z) for x, y, z in languages]
-deault_language = languages[0]
 
 class Branch(models.Model):
     name = models.CharField(_('Filial nomi'), max_length=127)

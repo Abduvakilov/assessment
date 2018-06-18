@@ -15,6 +15,7 @@ urlpatterns = [
 
     # Tester Zone
     path('tester/', views.tester, name='tester'),
+    path('tester/import/', views.import_questions, name='import'),
     path('tester/result/<int:response_id>/', views.result, name='result'),
     path('tester/report/', views.report, name='report'),
 ]
