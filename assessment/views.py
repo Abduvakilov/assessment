@@ -193,10 +193,12 @@ def tester(request):
 
 @login_required
 def import_questions(request):
+    title = "Savollarni fayl ko'rinishida kiritish"
     def response_with_error(error):
-        return render(request, 'import.html', {'title': _('Tester Zone'), 'error': error})
+        return render(request, 'import.html', {'title': title, 'error': error})
     if not request.user.is_staff:
         return response_with_error("Ruhsat yo'q") # Forbidden
+    success = False
     if request.method == 'POST':
         if 'txt' not in request.FILES['file'].name:
             return response_with_error("Faqat .txt formatidagi fayl yuklanishi mumkin")   # wrong extension
@@ -242,10 +244,13 @@ def import_questions(request):
                                                    category=category) )
                 else:
                     question_list[question_no].text += "\n"+row
-
+            success = True
         except:
             return response_with_error("Savollar qolif bo'yicha kiritilganinga ishanch xosil qiling")
-    return render(request, 'import.html', {'title': _('Tester Zone'), 'success' : True})
+    categories_available = Category.objects.values_list('name', flat=True)
+    return render(request, 'import.html', {'title': title,
+                                           'categories_available': categories_available,
+                                           'success' : success})
 
 
 @login_required

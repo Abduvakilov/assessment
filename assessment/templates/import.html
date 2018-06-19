@@ -1,18 +1,29 @@
 {% extends 'Tbase.html' %}
 {% block content %}
+{% load static %}
 {% load i18n %}
+<h3>{{ title }}</h3>
 <form action="{% url 'assessment:import' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
-        <input type="file" name="file" required>
-        {% if error %}
-            <tr class="red" id="error"><td></td><td>{{ error }}</td></tr>
-        {% endif %}
-        <tr><td></td><td><input type="submit" value="{% trans "Ko'rish" %}" onclick="document.getElementById('error').innerHTML ='';"/></td></tr>
-    </table>
+    <p>Savol toifalari ? belgisi bilan boshlansin va bexato yozilsin. Keyin savol matni kiritilsin. Savollar bir necha qatorda ko'rsatilishi ham mumkin</p>
+    <p>Savoldan so'ng + yoki - belgisi bilan savolga tegishli javob variantlari kiritilsin. Bunda javob varianti + va - uchun 1 va 0 ball berilishini bildiradi</p>
+    <p><a href="{% static 'savol_namuna.txt' %}">Namuna faylni ko'rish</a></p>
+    <input type="file" name="file" required>
+    {% if error %}
+    <tr class="red" id="error"><td></td><td>{{ error }}</td></tr>
+    {% endif %}
+    <br>
+    <input class="btn btn-primary" type="submit" value="{% trans "Savollarni kiritish" %}" onclick="document.getElementById('error').innerHTML ='';"/>
     {% if success %}
-        <p class="green">Savollar muvaffaqqiyatli kiritildi</p>
+    <p class="green">Savollar muvaffaqqiyatli kiritildi</p>
     {% endif %}
 
 </form>
+<h4>Mavjud Savol toifalari</h4>
+<ul>
+    {% for category in categories_available %}
+    <li>{{ category }}</li>
+    {% endfor %}
+</ul>
+
 {% endblock %}

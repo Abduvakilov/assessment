@@ -1,0 +1,27 @@
+? Kompyuter savodxonligi
+Savol matni
++ Javob 1
+- Javob 2
+- Javob 3
+- Javob 4
+
+Ikkita qatorli 
+Savol matni 
++ To'g'ri javob
+- Noto'g'ri javob
+- Noto'g'ri javob 2
+- Noto'g'ri javob 3
+
+? Kredit 
+Toifa 2 Savol matni
++ Javob 1
+- Javob 2
+- Javob 3
+- Javob 4
+
+Ikkit qatorli 
+Toifa 2 Savol matni 2 
++ To'g'ri javob
+- Noto'g'ri javob
+- Noto'g'ri javob 2
+- Noto'g'ri javob 3
