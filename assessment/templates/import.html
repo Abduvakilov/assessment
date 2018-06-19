@@ -10,6 +10,9 @@
         {% endif %}
         <tr><td></td><td><input type="submit" value="{% trans "Ko'rish" %}" onclick="document.getElementById('error').innerHTML ='';"/></td></tr>
     </table>
+    {% if success %}
+        <p class="green">Savollar muvaffaqqiyatli kiritildi</p>
+    {% endif %}
 
 </form>
 {% endblock %}
