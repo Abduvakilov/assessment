@@ -35,7 +35,6 @@ def index(request):
         response = Response.objects.get(pk=request.session['responseid'])
         if response.is_finished is False:
             return HttpResponseRedirect(reverse('assessment:test', args=(1,)))
-    print(_("Filial nomi"))
     lang_code = request.session['lang_code']
     testee = request.user.testee
     exams = Exam.objects.filter(groups=testee.group,
@@ -195,59 +194,61 @@ def tester(request):
 def import_questions(request):
     title = "Savollarni fayl ko'rinishida kiritish"
     def response_with_error(error):
-        return render(request, 'import.html', {'title': title, 'error': error})
+        return render(request, 'import.html', {'title': title,
+                                               'categories_available' : categories_available,
+                                               'error': error})
     if not request.user.is_staff:
         return response_with_error("Ruhsat yo'q") # Forbidden
     success = False
+    categories_available = Category.objects.values_list('name', flat=True)
     if request.method == 'POST':
         if 'txt' not in request.FILES['file'].name:
             return response_with_error("Faqat .txt formatidagi fayl yuklanishi mumkin")   # wrong extension
 
-        try:
-            txt_to_import = request.FILES['file'].read().decode('utf8')
-            rows = [x.strip() for x in txt_to_import.split("\n") if x.strip()]
-            categories = [x[1:].strip() for x in rows if x.startswith("?")] # Get category line and cut ? mark
-            categories_found = Category.objects.filter(name__in=categories)
-            if len(categories) == 0:
-                return response_with_error("Savollar toifalari to'g'ri kiritilganinga ishonch xosil qiling") # Categories not found
-            if len(categories) != len(categories_found):
-                return response_with_error("Savollar toifalari to'g'ri kiritilganinga ishonch xosil qiling") # Categories not found
+        # try:
+        txt_to_import = request.FILES['file'].read().decode('cp1251')
+        rows = [x.strip() for x in txt_to_import.split("\n") if x.strip()]
+        categories = [x[1:].strip() for x in rows if x.startswith("?")] # Get category line and cut ? mark
+        categories_found = Category.objects.filter(name__in=categories)
+        if len(categories) == 0:
+            return response_with_error("Savollar toifalari to'g'ri kiritilganinga ishonch xosil qiling") # Categories not found
+        if len(categories) != len(categories_found):
+            return response_with_error("Savollar toifalari to'g'ri kiritilganinga ishonch xosil qiling") # Categories not found
 
-            print(rows)
-            category_no = -1 # negative to make zero after increment
-            question_no = -1
-            question_started = False
-            question_list = []
-            def create_choice(row, mark):
-                global question_started
-                if question_started:
-                    question_started = False
-                    question_list[question_no].save()
-                Choice.objects.create(question=question_list[question_no],
-                                      text=row[1:].strip(),
-                                      mark=mark)
-            for row in rows:
-                global question_started
-                if row.startswith('-'):
-                    create_choice(row, 0)
-                elif row.startswith('+'):
-                    create_choice(row, 1)
-                elif row.startswith('?'):
-                    category_no += 1
-                    category = categories_found[category_no]
-                    print(category_no)
-                    print(question_no)
-                elif not question_started:
-                    question_no += 1
-                    question_started = True
-                    question_list.append( Question(text=row,
-                                                   category=category) )
-                else:
-                    question_list[question_no].text += "\n"+row
-            success = True
-        except:
-            return response_with_error("Savollar qolif bo'yicha kiritilganinga ishanch xosil qiling")
-    categories_available = Category.objects.values_list('name', flat=True)
+        print(rows)
+        category_no = -1 # negative to make zero after increment
+        question_no = -1
+        question_started = False
+        question_list = []
+        def create_choice(row, mark):
+            global question_started
+            if question_started:
+                question_started = False
+                question_list[question_no].save()
+            Choice.objects.create(question=question_list[question_no],
+                                  text=row[1:].strip(),
+                                  mark=mark)
+        for row in rows:
+            global question_started
+            if row.startswith('-'):
+                create_choice(row, 0)
+            elif row.startswith('+'):
+                create_choice(row, 1)
+            elif row.startswith('?'):
+                category_no += 1
+                category = categories_found[category_no]
+                print(category_no)
+                print(question_no)
+            elif not question_started:
+                question_no += 1
+                question_started = True
+                question_list.append( Question(text=row,
+                                               category=category) )
+            else:
+                question_list[question_no].text += "\n"+row
+        success = True
+        # except:
+        #     return response_with_error("Savollar qolif bo'yicha kiritilganinga ishanch xosil qiling")
     return render(request, 'import.html', {'title': title,
                                            'categories_available': categories_available,
                                            'success' : success})

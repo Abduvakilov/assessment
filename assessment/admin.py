@@ -89,7 +89,7 @@ class UserAdmin(AuthUserAdmin):
     get_testee_branch.admin_order_field = 'testee__branch'
     list_display = ('username', 'first_name', 'last_name',  'get_testee_branch', 'get_testee_group', 'is_staff')
     AuthUserAdmin.list_filter += ('testee__branch', 'testee__group',)
-    AuthUserAdmin.search_fields += ( 'testee__branch', 'testee__group__name',)
+    AuthUserAdmin.search_fields += ( 'testee__branch__name', 'testee__group__name',)
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Exam, ExamAdmin)
