@@ -14,7 +14,7 @@ class Branch(models.Model):
     name = models.CharField(_('Filial nomi'), max_length=127)
     code = models.PositiveSmallIntegerField(_("Filial kodi"))
     def __str__(self):
-        return self.name
+        return str(self.code) + ' ' + self.name
     class Meta:
         verbose_name = _("Filial")
         verbose_name_plural = _("Filiallar")

@@ -4,6 +4,9 @@ from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.forms import Textarea
 from django.utils.html import format_html
 
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+
 class ChoiceInline(admin.TabularInline):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':100})},
@@ -46,7 +49,7 @@ class TesteeGroupInline(admin.TabularInline):
 class TesteeGroupAdmin(admin.ModelAdmin):
     inlines = [TesteeGroupInline]
     list_display = ('name', 'get_categories')
-    list_filter = ['name', 'category']
+    list_filter = ['category']
     def get_categories(self, obj):
         return ", ".join([p.name for p in obj.category.all()])
     get_categories.short_description = "Savol Toifalari"
@@ -76,6 +79,10 @@ class ResponseAdmin(admin.ModelAdmin):
     search_fields = ['testee__group__name', 'testee__branch__name', 'testee__user__first_name', 'testee__user__last_name']
 
 
+class BranchAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code')
+
+
 
 class UserAdmin(AuthUserAdmin):
     inlines = [TesteeInline]
@@ -91,6 +98,37 @@ class UserAdmin(AuthUserAdmin):
     AuthUserAdmin.list_filter += ('testee__branch', 'testee__group',)
     AuthUserAdmin.search_fields += ( 'testee__branch__name', 'testee__group__name',)
 
+    actions = ['update_branch_or_group']
+
+    def update_branch_or_group(self, request, users):
+        from .forms import BranchAndGroupForm
+        from .models import Testee
+        if 'apply' in request.POST:
+            form = BranchAndGroupForm(request.POST)
+            if form.is_valid():
+                testees = Testee.objects.filter(user__in=users)
+                print(testees)
+                if request.POST['group'] != '':
+                    testees.update(group_id=request.POST['group'])
+                    print(users)
+                if request.POST['branch'] != '':
+                    testees.update(branch_id=request.POST['branch'])
+
+            self.message_user(request,
+                              "{} ta foydalanuvchi guruhi va/yoki filiali o'zgartirildi".format(users.count()))
+            return HttpResponseRedirect(request.get_full_path())
+
+        form = BranchAndGroupForm()
+        return render(request,
+                      'admin/update_branch_or_group.html',
+                      context={'users': users, 'form': form})
+
+    update_branch_or_group.short_description = "Guruh yoki fillialni o'zgartirish"
+
+
+
+
+
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(TesteeGroup, TesteeGroupAdmin)
@@ -102,7 +140,7 @@ admin.site.register(User, UserAdmin)
 
 
 admin.site.register(Category)
-admin.site.register(Branch)
+admin.site.register(Branch, BranchAdmin)
 
 
 # class TesteeAdmin(admin.ModelAdmin):
