@@ -107,12 +107,12 @@ class UserAdmin(AuthUserAdmin):
             form = BranchAndGroupForm(request.POST)
             if form.is_valid():
                 testees = Testee.objects.filter(user__in=users)
-                print(testees)
-                if request.POST['group'] != '':
-                    testees.update(group_id=request.POST['group'])
-                    print(users)
-                if request.POST['branch'] != '':
-                    testees.update(branch_id=request.POST['branch'])
+                for testee in testees:
+                    if request.POST['group'] != '':
+                        testee.group = TesteeGroup.objects.get(pk=request.POST['group'])
+                    if request.POST['branch'] != '':
+                        testee.branch = Branch.objects.get(pk=request.POST['branch'])
+                    testee.save()
 
             self.message_user(request,
                               "{} ta foydalanuvchi guruhi va/yoki filiali o'zgartirildi".format(users.count()))
