@@ -48,12 +48,45 @@ class TesteeGroupInline(admin.TabularInline):
 
 class TesteeGroupAdmin(admin.ModelAdmin):
     inlines = [TesteeGroupInline]
-    list_display = ('name', 'get_categories')
+    list_display = ('name', 'get_testee_count', 'get_categories')
     list_filter = ['category']
     def get_categories(self, obj):
         return ", ".join([p.name for p in obj.category.all()])
     get_categories.short_description = "Savol Toifalari"
+    def get_testee_count(self, obj):
+        return obj.testee_set.count()
+    get_testee_count.short_description = "Guruh azolari soni"
     exclude = ('category',)
+    search_fields = ('name', 'category__name')
+
+    actions = ['replace_group']
+
+    def replace_group(self, request, groups):
+        from .forms import GroupReplaceForm
+        from .models import Testee
+        if 'apply' in request.POST:
+            form = GroupReplaceForm(request.POST)
+            if form.is_valid():
+                groups = groups.exclude(pk=request.POST['group'])
+                print("groups: ", groups)
+                testees = Testee.objects.filter(group__in=groups)
+                count = testees.count()
+                if request.POST['group'] != '':
+                    testees.update(group=TesteeGroup.objects.get(pk=request.POST['group']))
+                    if 'delete_group' in request.POST:
+                        groups.delete()
+
+                self.message_user(request,
+                                  "{} ta foydalanuvchi guruhi o'zgartirildi".format(count))
+            return HttpResponseRedirect(request.get_full_path())
+
+        form = GroupReplaceForm()
+        return render(request,
+                      'admin/replace_group.html',
+                      context={'groups': groups, 'form': form})
+
+    replace_group.short_description = "Guruhga tegishli foydalanuvchilarni ko'chirish"
+
 
 class TesteeInline(admin.StackedInline):
     model = Testee
@@ -81,6 +114,7 @@ class ResponseAdmin(admin.ModelAdmin):
 
 class BranchAdmin(admin.ModelAdmin):
     list_display = ('name', 'code')
+    search_fields = ('name', 'code')
 
 
 
@@ -107,7 +141,7 @@ class UserAdmin(AuthUserAdmin):
             form = BranchAndGroupForm(request.POST)
             if form.is_valid():
                 testees = Testee.objects.filter(user__in=users)
-                for testee in testees:
+                for testee in testees:                   ## Update gave InternalError
                     if request.POST['group'] != '':
                         testee.group = TesteeGroup.objects.get(pk=request.POST['group'])
                     if request.POST['branch'] != '':

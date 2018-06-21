@@ -8,9 +8,9 @@ Qaysi guruhga ko'chirib o'tkizmoqchisiz?
 </p>
 <table>
   {{ form.as_table }}
-<p>
-Ehtiyot bo'ling. Ushbu bilan siz mavjud Guruhlarni o'chirib yuborishingiz mumkin
-</p>
+<tr>
+<td></td><td>Ehtiyot bo'ling. Ushbu bilan siz mavjud Guruhlarni o'chirib yuborishingiz mumkin</td>
+</tr>
   {% for group in groups %}
         <input type="hidden" name="_selected_action" value="{{ group.pk }}" />
   {% endfor %}
