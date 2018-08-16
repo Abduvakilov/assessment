@@ -13,7 +13,7 @@ class ReportForm(forms.Form):
 
 class BranchAndGroupForm(forms.Form):
     branch = forms.ModelChoiceField(label='Filial:', queryset=Branch.objects.all().order_by('name'), required=False)
-    group    = forms.ModelChoiceField(label="Guruh:", queryset=TesteeGroup.objects.all().order_by('name'), required=False)
+    group  = forms.ModelChoiceField(label="Guruh:", queryset=TesteeGroup.objects.all().order_by('name'), required=False)
 
 class GroupReplaceForm(forms.Form):
     group    = forms.ModelChoiceField(label="Guruh:", queryset=TesteeGroup.objects.all().order_by('name'), required=False)

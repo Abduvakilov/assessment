@@ -3,13 +3,12 @@
 {% load static %}
 {% load i18n %}
 <h3>{{ title }}</h3>
-<form action="{% url 'assessment:import' %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'assessment:import' %}" method="post">
     {% csrf_token %}
-    <p>Yangi txt fayl yaratib uni <b class="red">UTF-8 kodirobkasida</b> saqlang va fayl ichida savollarni kiriting.</p>
     <p>Savol toifalari ? belgisi bilan boshlansin va bexato yozilsin. Keyin savol matni kiritilsin. Savollar bir necha qatorda ko'rsatilishi ham mumkin</p>
     <p>Savoldan so'ng + yoki - belgisi bilan savolga tegishli javob variantlari kiritilsin. Bunda javob varianti + va - uchun 1 va 0 ball berilishini bildiradi</p>
     <p><a href="{% static 'savol_namuna.txt' %}">Namuna faylni ko'rish</a></p>
-    <input type="file" name="file" required>
+    <textarea name="questions" rows="4" cols="120" required></textarea>
     {% if error %}
     <p class="red" id="error">{{ error }}</p>
     {% endif %}
